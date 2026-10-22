@@ -16,6 +16,11 @@ final class Receiver {
 
     private(set) var devices: [MirroredDevice] = []
     private(set) var status: Status = .stopped
+    /// Code shown on screen while an iPad asks for it; nil = none.
+    private(set) var pairingCode: String?
+    /// iPads that reconnect without a code.
+    private(set) var pairedDeviceCount = 0
+    let access = AccessControl()
 
     var visibleDevices: [MirroredDevice] { devices.filter { !$0.isHidden } }
 
@@ -46,15 +51,40 @@ final class Receiver {
         self.settings = settings
         self.deviceSettings = deviceSettings
         bridge.receiver = self
+        pairedDeviceCount = access.pairedCount
+        access.onCodeChange = { [weak self] code in
+            DispatchQueue.main.async {
+                MainActor.assumeIsolated { self?.codeChanged(code) }
+            }
+        }
+    }
+
+    func forgetPairings() {
+        access.forgetPairings()
+        pairedDeviceCount = 0
+    }
+
+    private func codeChanged(_ code: String?) {
+        pairingCode = code
+        pairedDeviceCount = access.pairedCount
+        guard let code else { return }
+        // Nobody typed it in: hide it again after a minute.
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .seconds(60))
+            if self?.pairingCode == code {
+                self?.pairingCode = nil
+            }
+        }
     }
 
     func start() {
         stop()
         status = .starting
+        access.configure(mode: settings.accessMode, password: settings.accessPassword)
         configuration = ReceiverConfiguration(
             name: settings.receiverName, identity: identity,
             width: settings.resolution.size.width, height: settings.resolution.size.height,
-            maxFPS: settings.maxFPS, audioEnabled: settings.audioEnabled)
+            maxFPS: settings.maxFPS, audioEnabled: settings.audioEnabled, access: access)
         // macOS' own AirPlay receiver occupies 7000, so try a nearby fixed port first.
         startListener(preferredPorts: [7100, 7200, 0])
     }
@@ -100,7 +130,7 @@ final class Receiver {
         switch state {
         case .ready:
             guard let port = listener.port?.rawValue else { return }
-            bonjour.start(name: settings.receiverName, port: port, identity: identity)
+            bonjour.start(name: settings.receiverName, port: port, identity: identity, access: access.effectiveMode)
             status = .running(port: port)
         case let .failed(error):
             log.error("Listener failed: \(error.localizedDescription, privacy: .public)")

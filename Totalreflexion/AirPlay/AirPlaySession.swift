@@ -10,6 +10,7 @@ struct ReceiverConfiguration {
     var height: Int
     var maxFPS: Int
     var audioEnabled: Bool
+    var access: AccessControl
 }
 
 protocol AirPlaySessionDelegate: AnyObject {
@@ -36,6 +37,8 @@ final class AirPlaySession {
 
     private var receiveBuffer = Data()
     private let pairing: PairingSession
+    private let pinPairing = PinPairing()
+    private var passwordAccepted = false
     private let fairPlay = FairPlaySession()
     private var sessionKey: Data?
     private var audioIV: Data?
@@ -151,6 +154,13 @@ final class AirPlaySession {
             return .binary(configuration.identity.publicKey)
         case "/pair-verify":
             return handlePairVerify(request)
+        case "/pair-pin-start":
+            // The iPad asks for a code: show a fresh one on screen.
+            guard configuration.access.effectiveMode == .code else { return .status(404, "Not Found") }
+            configuration.access.showNewCode()
+            return .ok
+        case "/pair-setup-pin":
+            return handlePairSetupPin(request)
         case "/fp-setup":
             return fairPlay.setup(request.body)
         default:
@@ -162,10 +172,11 @@ final class AirPlaySession {
     private func handleInfo(_ request: RTSPRequest) -> RTSPResponse {
         var info: [String: Any] = [:]
         if let qualifier = (request.plistBody?["qualifier"] as? [String])?.first {
+            let access = configuration.access.effectiveMode
             if qualifier == "txtAirPlay" {
-                info["txtAirPlay"] = TXTRecord.airPlay(identity: configuration.identity).data
+                info["txtAirPlay"] = TXTRecord.airPlay(identity: configuration.identity, access: access).data
             } else if qualifier == "txtRAOP" {
-                info["txtRAOP"] = TXTRecord.raop(identity: configuration.identity).data
+                info["txtRAOP"] = TXTRecord.raop(identity: configuration.identity, access: access).data
             }
         }
         if request.header("Content-Type") != nil {
@@ -208,27 +219,21 @@ final class AirPlaySession {
         return .plist(info)
     }
 
-    private func handlePairVerify(_ request: RTSPRequest) -> RTSPResponse {
-        guard let flag = request.body.first else { return .status(400, "Bad Request") }
-        do {
-            if flag == 1 {
-                return .binary(try pairing.verifyStart(request.body))
-            }
-            try pairing.verifyFinish(request.body)
-            return .binary(Data())
-        } catch {
-            log.error("pair-verify failed: \(error.localizedDescription, privacy: .public)")
-            var response = RTSPResponse.status(470, "Connection Authorization Required")
-            response.disconnect = true
-            return response
-        }
-    }
-
     private func handleSetup(_ request: RTSPRequest) -> RTSPResponse {
         guard let body = request.plistBody else { return .status(400, "Bad Request") }
         var result: [String: Any] = [:]
 
         if let ekey = body["ekey"] as? Data, let eiv = body["eiv"] as? Data {
+            // With a password, the first SETUP is answered with a digest challenge until the iPad sends it.
+            if !passwordAccepted {
+                if let challenge = configuration.access.passwordChallenge(
+                    method: request.method, authorization: request.header("Authorization")) {
+                    var response = RTSPResponse.status(401, "Unauthorized")
+                    response.headers.append(("WWW-Authenticate", challenge))
+                    return response
+                }
+                passwordAccepted = true
+            }
             guard setupKeys(ekey: ekey, eiv: eiv) else {
                 log.error("FairPlay key decryption failed")
                 return .status(500, "Internal Server Error")
@@ -379,5 +384,46 @@ final class AirPlaySession {
         timing = nil
         connection.cancel()
         delegate?.sessionDidEnd(self)
+    }
+}
+
+// MARK: - Pairing and access control
+
+extension AirPlaySession {
+    private func handlePairVerify(_ request: RTSPRequest) -> RTSPResponse {
+        guard let flag = request.body.first else { return .status(400, "Bad Request") }
+        do {
+            if flag == 1 {
+                // With a code, only iPads paired before may skip it. An empty answer makes the iPad ask for
+                // the code (pair-pin-start), as with UxPlay.
+                if configuration.access.effectiveMode == .code, request.body.count == 68,
+                   !configuration.access.isPaired(request.body.subdata(in: 36..<68)) {
+                    return .ok
+                }
+                return .binary(try pairing.verifyStart(request.body))
+            }
+            try pairing.verifyFinish(request.body)
+            return .binary(Data())
+        } catch {
+            log.error("pair-verify failed: \(error.localizedDescription, privacy: .public)")
+            var response = RTSPResponse.status(470, "Connection Authorization Required")
+            response.disconnect = true
+            return response
+        }
+    }
+
+    private func handlePairSetupPin(_ request: RTSPRequest) -> RTSPResponse {
+        guard let body = request.plistBody else { return .status(400, "Bad Request") }
+        let access = configuration.access
+        switch pinPairing.handle(body, pin: access.currentCode, serverKey: configuration.identity.publicKey) {
+        case let .reply(reply):
+            return .plist(reply)
+        case let .paired(reply, clientKey):
+            access.pair(clientKey)
+            return .plist(reply)
+        case .failed:
+            log.info("pair-setup-pin failed: wrong code or unexpected request")
+            return .status(470, "Client Authentication Failure")
+        }
     }
 }

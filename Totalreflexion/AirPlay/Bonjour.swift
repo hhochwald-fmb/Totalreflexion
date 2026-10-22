@@ -31,10 +31,11 @@ struct TXTRecord {
         return result
     }
 
-    static func airPlay(identity: ServerIdentity) -> TXTRecord {
+    static func airPlay(identity: ServerIdentity, access: AccessMode) -> TXTRecord {
         var txt = TXTRecord()
         txt.set("deviceid", identity.deviceIDString)
         txt.set("features", AirPlayConstants.featuresString)
+        txt.set("pw", access == .open ? "false" : "true")
         txt.set("flags", "0x4")
         txt.set("model", AirPlayConstants.model)
         txt.set("pk", identity.publicKeyHex)
@@ -44,7 +45,7 @@ struct TXTRecord {
         return txt
     }
 
-    static func raop(identity: ServerIdentity) -> TXTRecord {
+    static func raop(identity: ServerIdentity, access: AccessMode) -> TXTRecord {
         var txt = TXTRecord()
         txt.set("ch", "2")
         txt.set("cn", "0,1,2,3")
@@ -55,8 +56,13 @@ struct TXTRecord {
         txt.set("am", AirPlayConstants.model)
         txt.set("md", "0,1,2")
         txt.set("rhd", "5.6.0.0")
-        txt.set("pw", "false")
-        txt.set("sf", "0x4")
+        // Status flags: 0x8 = code required, 0x80 = password required (values as in UxPlay).
+        txt.set("pw", access == .open ? "false" : "true")
+        switch access {
+        case .open: txt.set("sf", "0x4")
+        case .code: txt.set("sf", "0x8c")
+        case .password: txt.set("sf", "0x84")
+        }
         txt.set("sr", "44100")
         txt.set("ss", "16")
         txt.set("sv", "false")
@@ -76,12 +82,12 @@ final class BonjourAdvertiser {
     private let queue = DispatchQueue(label: "Totalreflexion.bonjour")
     private let log = Logger(subsystem: "Totalreflexion", category: "Bonjour")
 
-    func start(name: String, port: UInt16, identity: ServerIdentity) {
+    func start(name: String, port: UInt16, identity: ServerIdentity, access: AccessMode) {
         stop()
         airplayRef = register(name: name, type: "_airplay._tcp", port: port,
-                              txt: TXTRecord.airPlay(identity: identity).data)
+                              txt: TXTRecord.airPlay(identity: identity, access: access).data)
         raopRef = register(name: "\(identity.deviceIDHex)@\(name)", type: "_raop._tcp", port: port,
-                           txt: TXTRecord.raop(identity: identity).data)
+                           txt: TXTRecord.raop(identity: identity, access: access).data)
     }
 
     func stop() {

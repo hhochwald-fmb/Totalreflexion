@@ -87,7 +87,22 @@ private struct ConnectHelp: View {
             HelpText("Auf dem iPad: Kontrollzentrum › Bildschirmsynchronisierung › **Synchronisierung stoppen**. "
                      + "Oder im Steuerfenster: **…** neben dem iPad › **Verbindung trennen**.")
         }
-        HelpTip("Der Name in der AirPlay-Liste lässt sich ändern: Steuerfenster › ganz unten **Empfänger** aufklappen.")
+        HelpSection(title: "Name in der Liste") {
+            HelpText("Auf dem iPad steht dein Mac als „Totalreflexion“ in der Liste. Unter Steuerfenster › **Empfänger** › "
+                     + "**Name auf dem iPad** gibst du ihm einen eigenen Namen, z. B. den Raum („Raum 204“). Danach "
+                     + "**Neu starten** klicken.")
+        }
+        HelpSection(title: "Anmeldung: Code oder Passwort") {
+            HelpText("Unter Steuerfenster › **Empfänger** › **Anmeldung** legst du fest, wer sich verbinden darf. "
+                     + "Danach **Neu starten** klicken.")
+            HelpTable(rows: [
+                ("Ohne", "Jedes iPad im selben WLAN kann sich verbinden."),
+                ("Code auf dem Bildschirm", "Beim ersten Verbinden zeigt der Mac einen 4-stelligen Code groß auf allen "
+                    + "Bildschirmen, auch auf dem Beamer. Wer ihn sieht, tippt ihn am iPad ein. Danach erkennt der Mac "
+                    + "das iPad wieder. **Alle vergessen** verlangt den Code von allen erneut."),
+                ("Passwort", "Das iPad fragt beim Verbinden nach dem Passwort, das du im Steuerfenster festlegst.")
+            ])
+        }
         HelpTip("Steht dein Mac zweimal in der Liste (z. B. „Totalreflexion“ und „…s iMac“), ist der zweite Eintrag "
                 + "der eingebaute AirPlay-Empfänger von macOS. Wähle **Totalreflexion**.")
     }
@@ -106,7 +121,8 @@ private struct ControlHelp: View {
                 ("iPads", "Jedes verbundene iPad mit Live-Vorschau (siehe unten)."),
                 ("Rahmen", "Rahmen, Farbe, eigenes Rahmenbild und Namen – für alle iPads."),
                 ("Hintergrund", "Nur bei der Bühne: Farbe, Verlauf oder Bild."),
-                ("Empfänger", "Aufklappen für Name, Auflösung, Bildrate und Ton.")
+                ("Empfänger", "Name auf dem iPad, Anmeldung (ohne, Code oder Passwort) und unter „Qualität & Ton“ "
+                    + "Auflösung, Bildrate und Ton.")
             ])
         }
         HelpSection(title: "Pro iPad in der Liste") {
@@ -287,7 +303,7 @@ private struct TroubleshootingHelp: View {
         HelpSection(title: "„Totalreflexion“ fehlt in der AirPlay-Liste") {
             HelpSteps(steps: [
                 "Mac und iPad im selben WLAN?",
-                "Statuspunkt oben im Steuerfenster grün? Sonst **Empfänger** aufklappen › **Empfänger neu starten**.",
+                "Statuspunkt oben im Steuerfenster grün? Sonst Totalreflexion beenden (⌘Q) und neu öffnen.",
                 "Systemeinstellungen › Datenschutz & Sicherheit › **Lokales Netzwerk**: Totalreflexion erlauben.",
                 "Fragt die Firewall nach eingehenden Verbindungen: **Erlauben**."
             ])
@@ -302,8 +318,12 @@ private struct TroubleshootingHelp: View {
                 ("„Bildschirm gesperrt“", "Das iPad ist gesperrt – entsperren, dann läuft das Bild weiter."),
                 ("Videos aus Apps starten nicht", "Unterstützt wird die Bildschirmsynchronisierung. Das „Streamen“ "
                     + "einzelner Videos (AirPlay-Symbol in YouTube & Co.) nicht."),
-                ("Kein Ton", "Empfänger › „Ton wiedergeben“; iPad stumm (…)? Lautstärke am iPad?"),
-                ("Bild ruckelt", "Empfänger: kleinere Auflösung oder 30 fps, danach neu starten."),
+                ("Code erscheint nicht", "Anmeldung auf „Code auf dem Bildschirm“ und **Neu starten** geklickt? Ein "
+                    + "schon gekoppeltes iPad braucht keinen Code – **Alle vergessen** erzwingt ihn wieder."),
+                ("Code oder Passwort wird abgelehnt", "Am iPad noch einmal verbinden; beim Code den aktuell angezeigten "
+                    + "nehmen, er ändert sich bei jedem Versuch."),
+                ("Kein Ton", "Empfänger › Qualität & Ton › „Ton wiedergeben“; iPad stumm (…)? Lautstärke am iPad?"),
+                ("Bild ruckelt", "Empfänger › Qualität & Ton: kleinere Auflösung oder 30 fps, danach neu starten."),
                 ("Mac doppelt in der Liste", "Der zweite Eintrag ist der AirPlay-Empfänger von macOS. Abschalten unter "
                     + "Systemeinstellungen › Allgemein › AirDrop & Handoff.")
             ])

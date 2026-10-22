@@ -219,7 +219,7 @@ struct BackgroundSection: View {
     }
 }
 
-/// Network and quality settings; they apply after restarting the receiver.
+/// Name, access and quality of the AirPlay receiver; changes apply after restarting it.
 struct ReceiverSection: View {
     let receiver: Receiver
     @Bindable var settings: AppSettings
@@ -227,8 +227,13 @@ struct ReceiverSection: View {
 
     var body: some View {
         Section {
-            DisclosureGroup("Empfänger: Name, Qualität, Ton") {
-                TextField("Name im AirPlay-Menü", text: $settings.receiverName)
+            TextField("Name auf dem iPad", text: $settings.receiverName)
+                .help("So heißt der Mac in der Liste „Bildschirmsynchronisierung“, z. B. der Raumname")
+            Picker("Anmeldung", selection: $settings.accessMode) {
+                ForEach(AccessMode.allCases) { Text($0.title).tag($0) }
+            }
+            accessDetails
+            DisclosureGroup("Qualität & Ton") {
                 Picker("Max. Auflösung", selection: $settings.resolution) {
                     ForEach(StreamResolution.allCases) { Text($0.title).tag($0) }
                 }
@@ -237,20 +242,61 @@ struct ReceiverSection: View {
                     Text("60 fps").tag(60)
                 }
                 Toggle("Ton wiedergeben", isOn: $settings.audioEnabled)
-                Text("Änderungen gelten nach einem Neustart des Empfängers. Verbundene iPads werden dabei getrennt.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Button("Empfänger neu starten") {
-                    receiver.restart()
-                    needsRestart = false
-                }
-                .disabled(!needsRestart)
             }
+            if needsRestart {
+                HStack {
+                    Label("Gilt nach einem Neustart des Empfängers. Verbundene iPads werden dabei getrennt.",
+                          systemImage: "arrow.clockwise.circle")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Neu starten") {
+                        receiver.restart()
+                        needsRestart = false
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+        } header: {
+            Text("Empfänger")
         }
+        .onChange(of: settings.receiverName) { needsRestart = true }
+        .onChange(of: settings.accessMode) { needsRestart = true }
+        .onChange(of: settings.accessPassword) { needsRestart = true }
         .onChange(of: settings.resolution) { needsRestart = true }
         .onChange(of: settings.maxFPS) { needsRestart = true }
         .onChange(of: settings.audioEnabled) { needsRestart = true }
-        .onChange(of: settings.receiverName) { needsRestart = true }
+    }
+
+    @ViewBuilder private var accessDetails: some View {
+        switch settings.accessMode {
+        case .open:
+            Text("Jedes iPad im selben WLAN kann sich ohne Nachfrage verbinden.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        case .code:
+            Text("Verbindet sich ein iPad zum ersten Mal, zeigt der Mac einen 4-stelligen Code groß auf allen "
+                 + "Bildschirmen. Danach erkennt er das iPad wieder und fragt nicht erneut.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            LabeledContent("Gekoppelte iPads") {
+                HStack {
+                    Text("\(receiver.pairedDeviceCount)")
+                        .monospacedDigit()
+                    Button("Alle vergessen", action: receiver.forgetPairings)
+                        .disabled(receiver.pairedDeviceCount == 0)
+                        .help("Beim nächsten Verbinden müssen alle iPads den Code wieder eingeben")
+                }
+            }
+        case .password:
+            TextField("Passwort", text: $settings.accessPassword)
+                .help("Das iPad fragt beim Verbinden nach diesem Passwort")
+            if settings.accessPassword.isEmpty {
+                Label("Ohne Passwort kann sich weiterhin jedes iPad verbinden.", systemImage: "exclamationmark.triangle")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+            }
+        }
     }
 }
 

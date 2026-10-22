@@ -165,6 +165,8 @@ final class AppSettings {
     var backgroundImagePath: String? { didSet { defaults.set(backgroundImagePath, forKey: "bgImage") } }
     var backgroundImageFills: Bool { didSet { defaults.set(backgroundImageFills, forKey: "bgImageFills") } }
     var viewMode: ViewMode { didSet { defaults.set(viewMode.rawValue, forKey: "viewMode") } }
+    var accessMode: AccessMode { didSet { defaults.set(accessMode.rawValue, forKey: "accessMode") } }
+    var accessPassword: String { didSet { defaults.set(accessPassword, forKey: "accessPassword") } }
     var floatOnTop: Bool { didSet { defaults.set(floatOnTop, forKey: "floatOnTop") } }
 
     init() {
@@ -184,6 +186,8 @@ final class AppSettings {
         viewMode = ViewMode(rawValue: defaults.string(forKey: "viewMode") ?? "")
             ?? (defaults.bool(forKey: "floatingWindows") ? .floating : .grid)
         floatOnTop = defaults.object(forKey: "floatOnTop") as? Bool ?? true
+        accessMode = AccessMode(rawValue: defaults.string(forKey: "accessMode") ?? "") ?? .open
+        accessPassword = defaults.string(forKey: "accessPassword") ?? ""
     }
 
     private func store(_ color: CodableColor, _ key: String) {

@@ -17,6 +17,7 @@ AirPlay-Empfänger für macOS (ähnlich wie AirServer oder Reflector): iPads spi
 - **Rahmen:** nur der Bildschirm, ein gezeichneter iPad-Rahmen (randlos oder mit Home-Button, mehrere Farben) oder ein eigenes PNG-Mockup. Den Bildschirmbereich des PNGs erkennt die App automatisch; das Bild dreht sich mit dem iPad mit.
 - **Zoom** in Raster und Bühne: Pinch, ⌥ + Scrollrad oder ⌘+ / ⌘− / ⌘0. Bei Zoom wird mit zwei Fingern verschoben.
 - Ton wird mitübertragen (AAC-ELD).
+- **Name und Anmeldung** (Steuerfenster › Empfänger): eigener Name in der AirPlay-Liste (z. B. der Raum). Anmeldung ohne, mit **Code auf dem Bildschirm** (4 Ziffern groß auf allen Bildschirmen, gekoppelte iPads werden wiedererkannt; SRP-6a-Kopplung wie bei Apple TV/UxPlay) oder mit **Passwort** (RTSP-Digest).
 - **Hilfe** (⌘?, „?“ im Steuerfenster): erklärt alle Funktionen und die drei Ansichten. Öffnet sich beim ersten Start einmal von selbst.
 
 ## Bauen
@@ -28,6 +29,18 @@ open Totalreflexion.xcodeproj
 ```
 
 Die Projektdatei wird aus `project.yml` mit [XcodeGen](https://github.com/yonaskolb/XcodeGen) erzeugt. Beim Build läuft SwiftLint (`.swiftlint.yml`). Das App-Icon erzeugt `swift scripts/make-icon.swift Design/AppIcon-source.jpg Totalreflexion/Resources/Assets.xcassets/AppIcon.appiconset`.
+
+## Veröffentlichen
+
+Weitergabe außerhalb des App Stores (Developer ID + Notarisierung). Der App Store kommt wegen der GPL-3 nicht in Frage.
+
+```sh
+./scripts/release.sh             # baut, signiert, notarisiert → build/release/Totalreflexion-<Version>.dmg
+```
+
+Einmalig vorher: ein Zertifikat „Developer ID Application“ anlegen (Xcode › Einstellungen › Accounts › Manage Certificates) und die Zugangsdaten für die Notarisierung speichern (`xcrun notarytool store-credentials "Totalreflexion" --apple-id … --team-id 92TY4G7V4Z`). Details stehen oben im Skript. Die Version kommt aus `MARKETING_VERSION` in `project.yml`.
+
+Wegen der GPL-3 muss jeder, der die App bekommt, auch an den Quellcode kommen können (z. B. über ein öffentliches Repository). Der Lizenztext liegt der DMG bei.
 
 ## Hinweise
 

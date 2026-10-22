@@ -16,6 +16,7 @@ final class DisplayController {
     @ObservationIgnored weak var outputWindow: NSWindow?
     @ObservationIgnored private var fullScreenScreen: NSScreen?
     @ObservationIgnored private var panels: [UUID: DevicePanel] = [:]
+    @ObservationIgnored private let codeOverlay = CodeOverlay()
     @ObservationIgnored private let receiver: Receiver
     @ObservationIgnored private let settings: AppSettings
     @ObservationIgnored private let store: DeviceSettingsStore
@@ -99,6 +100,7 @@ final class DisplayController {
     }
 
     private func sync() {
+        codeOverlay.show(receiver.pairingCode)
         let visible = receiver.visibleDevices
         let wanted = visible.filter { settings.viewMode == .floating || $0.id == fullScreenID }
         let wantedIDs = Set(wanted.map(\.id))
