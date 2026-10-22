@@ -61,16 +61,20 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+/// The screen the receiver reports to the iPad. Mirroring keeps the iPad's own aspect ratio, but apps with
+/// their own external-display mode (e.g. presentation modes) render in this format, so 4:3 suits iPads best.
 enum StreamResolution: String, CaseIterable, Identifiable {
+    case iPadStandard
+    case iPad
     case fullHD
     case qhd
-    case iPad
     case uhd
 
     var id: String { rawValue }
 
     var size: (width: Int, height: Int) {
         switch self {
+        case .iPadStandard: (2048, 1536)
         case .fullHD: (1920, 1080)
         case .qhd: (2560, 1440)
         case .iPad: (2732, 2048)
@@ -81,10 +85,11 @@ enum StreamResolution: String, CaseIterable, Identifiable {
     var title: String {
         let size = size
         let name = switch self {
-        case .fullHD: "Full HD"
-        case .qhd: "QHD"
-        case .iPad: "iPad Pro"
-        case .uhd: "4K"
+        case .iPadStandard: "iPad 4:3"
+        case .iPad: "iPad Pro 4:3"
+        case .fullHD: "Full HD 16:9"
+        case .qhd: "QHD 16:9"
+        case .uhd: "4K 16:9"
         }
         return "\(name) (\(size.width) × \(size.height))"
     }
@@ -164,7 +169,7 @@ final class AppSettings {
 
     init() {
         receiverName = defaults.string(forKey: "receiverName") ?? "Totalreflexion"
-        resolution = StreamResolution(rawValue: defaults.string(forKey: "resolution") ?? "") ?? .qhd
+        resolution = StreamResolution(rawValue: defaults.string(forKey: "resolution") ?? "") ?? .iPadStandard
         maxFPS = defaults.object(forKey: "maxFPS") as? Int ?? 60
         audioEnabled = defaults.object(forKey: "audioEnabled") as? Bool ?? true
         showNames = defaults.object(forKey: "showNames") as? Bool ?? true

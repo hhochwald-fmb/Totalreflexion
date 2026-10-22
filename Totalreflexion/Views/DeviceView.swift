@@ -17,6 +17,13 @@ struct DeviceAppearance: Equatable {
         if style == .custom, customFramePath == nil {
             style = .modern
         }
+        // Content much wider than any iPad comes from an app's external-display mode, not from the iPad screen;
+        // an iPad frame around it would look like a device that does not exist.
+        let size = device.videoSize
+        if !device.isPhone, size.width > 0, size.height > 0,
+           max(size.width, size.height) / min(size.width, size.height) > 1.6 {
+            style = .none
+        }
     }
 }
 

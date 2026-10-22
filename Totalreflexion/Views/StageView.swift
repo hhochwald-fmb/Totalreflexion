@@ -90,6 +90,7 @@ private struct PresentationCanvas: View {
             }
             .frame(width: size.width, height: size.height)
             .clipped()
+            .coordinateSpace(.named(StageSpace.name))
         }
     }
 
@@ -132,6 +133,12 @@ private struct PresentationCanvas: View {
     }
 }
 
+/// Drags are measured on the stage, not on the device: the device moves under the pointer while dragging,
+/// and its own coordinates would move with it and make it jitter.
+private enum StageSpace {
+    static let name = "stage"
+}
+
 /// A device on the stage that can be dragged and resized.
 private struct PlacedDevice: View {
     let device: MirroredDevice
@@ -172,7 +179,7 @@ private struct PlacedDevice: View {
     }
 
     private var moveGesture: some Gesture {
-        DragGesture(minimumDistance: 3)
+        DragGesture(minimumDistance: 3, coordinateSpace: .named(StageSpace.name))
             .onChanged { value in
                 dragOffset = value.translation
             }
@@ -189,7 +196,7 @@ private struct PlacedDevice: View {
             .background(.black.opacity(0.6), in: Circle())
             .padding(6)
             .gesture(
-                DragGesture(minimumDistance: 1)
+                DragGesture(minimumDistance: 1, coordinateSpace: .named(StageSpace.name))
                     .onChanged { value in
                         // Keep the top-left corner in place while resizing.
                         let delta = max(value.translation.width, value.translation.height * aspect)
