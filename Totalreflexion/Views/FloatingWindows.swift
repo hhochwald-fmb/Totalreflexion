@@ -2,14 +2,18 @@ import AppKit
 import Observation
 import SwiftUI
 
-/// Shows iPads in their own borderless windows ("Eigene Fenster", like AirServer) and puts a single iPad
-/// full screen on request, in either mode.
+/// Shows iPads in their own borderless windows ("Frei schwebend", like AirServer), puts a single iPad
+/// full screen on request in any view, and moves the grid or stage window between screens.
 @MainActor
 @Observable
 final class DisplayController {
     /// Device currently shown full screen; nil = none.
     private(set) var fullScreenID: UUID?
+    /// Stage only: devices cannot be moved or resized.
+    var stageLocked = false
     @ObservationIgnored var didHandleLaunch = false
+    /// The grid or stage window, whichever is open.
+    @ObservationIgnored weak var outputWindow: NSWindow?
     @ObservationIgnored private var fullScreenScreen: NSScreen?
     @ObservationIgnored private var panels: [UUID: DevicePanel] = [:]
     @ObservationIgnored private let receiver: Receiver
@@ -62,6 +66,28 @@ final class DisplayController {
         }
     }
 
+    // MARK: - Grid or stage window
+
+    func toggleOutputFullScreen() {
+        outputWindow?.makeKeyAndOrderFront(nil)
+        outputWindow?.toggleFullScreen(nil)
+    }
+
+    /// Moves the grid or stage window to a screen and makes it full screen there.
+    func moveOutput(to screen: NSScreen) {
+        guard let window = outputWindow else { return }
+        let wasFullScreen = window.styleMask.contains(.fullScreen)
+        if wasFullScreen {
+            window.toggleFullScreen(nil)
+        }
+        // Leaving full screen is animated; moving during the animation is ignored.
+        DispatchQueue.main.asyncAfter(deadline: .now() + (wasFullScreen ? 0.8 : 0)) {
+            window.setFrame(screen.visibleFrame, display: true)
+            window.makeKeyAndOrderFront(nil)
+            window.toggleFullScreen(nil)
+        }
+    }
+
     // MARK: - Keeping the windows in sync
 
     private func observe() {
@@ -74,7 +100,7 @@ final class DisplayController {
 
     private func sync() {
         let visible = receiver.visibleDevices
-        let wanted = visible.filter { settings.floatingWindows || $0.id == fullScreenID }
+        let wanted = visible.filter { settings.viewMode == .floating || $0.id == fullScreenID }
         let wantedIDs = Set(wanted.map(\.id))
         for (id, panel) in panels where !wantedIDs.contains(id) {
             panel.close()

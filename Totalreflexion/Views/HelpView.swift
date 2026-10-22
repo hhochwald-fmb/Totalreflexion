@@ -3,11 +3,11 @@ import SwiftUI
 enum HelpTopic: String, CaseIterable, Identifiable {
     case overview
     case connect
+    case control
     case views
-    case mainWindow
-    case presentation
+    case grid
+    case stage
     case floating
-    case devices
     case appearance
     case shortcuts
     case troubleshooting
@@ -18,11 +18,11 @@ enum HelpTopic: String, CaseIterable, Identifiable {
         switch self {
         case .overview: "Was kann Totalreflexion?"
         case .connect: "iPad verbinden"
+        case .control: "Das Steuerfenster"
         case .views: "Die drei Ansichten"
-        case .mainWindow: "Hauptfenster"
-        case .presentation: "Präsentation"
-        case .floating: "Eigene Fenster"
-        case .devices: "Geräte verwalten"
+        case .grid: "Raster"
+        case .stage: "Bühne"
+        case .floating: "Frei schwebend"
         case .appearance: "Rahmen & Aussehen"
         case .shortcuts: "Tastenkürzel & Maus"
         case .troubleshooting: "Probleme lösen"
@@ -33,11 +33,11 @@ enum HelpTopic: String, CaseIterable, Identifiable {
         switch self {
         case .overview: "sparkles"
         case .connect: "airplayvideo"
+        case .control: "slider.horizontal.3"
         case .views: "rectangle.3.group"
-        case .mainWindow: "square.grid.2x2"
-        case .presentation: "play.rectangle.on.rectangle"
+        case .grid: "square.grid.2x2"
+        case .stage: "play.rectangle.on.rectangle"
         case .floating: "macwindow.on.rectangle"
-        case .devices: "list.bullet.rectangle"
         case .appearance: "ipad"
         case .shortcuts: "keyboard"
         case .troubleshooting: "wrench.and.screwdriver"
@@ -168,14 +168,11 @@ struct HelpText: View {
     }
 }
 
-/// A feature or view with icon, explanation and an optional button that opens a window.
+/// A feature or view with icon and explanation.
 struct HelpCard: View {
     let icon: String
     let title: String
     let text: String
-    var windowID: String?
-    var buttonTitle = "Öffnen"
-    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
@@ -188,11 +185,6 @@ struct HelpCard: View {
                     .font(.headline)
                 HelpText(text)
                     .foregroundStyle(.secondary)
-                if let windowID {
-                    Button(buttonTitle) { openWindow(id: windowID) }
-                        .controlSize(.small)
-                        .padding(.top, 2)
-                }
             }
             Spacer(minLength: 0)
         }
@@ -258,6 +250,15 @@ struct HelpTip: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.yellow.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+/// Brings the control window to the front, e.g. to try out what a page explains.
+struct OpenControlButton: View {
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some View {
+        Button("Steuerfenster öffnen", systemImage: "slider.horizontal.3") { openWindow(id: "control") }
     }
 }
 

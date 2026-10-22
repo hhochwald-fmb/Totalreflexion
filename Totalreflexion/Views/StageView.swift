@@ -1,47 +1,38 @@
 import AppKit
 import SwiftUI
-import UniformTypeIdentifiers
 
-/// Full-screen stage: a background that fills the screen and freely arranged devices on top.
-struct PresentationView: View {
+/// "Bühne" view: a background that fills the screen and freely arranged devices on top.
+/// Background, lock and screen are set in the control window.
+struct StageView: View {
     let receiver: Receiver
-    @Bindable var settings: AppSettings
+    let settings: AppSettings
     let store: DeviceSettingsStore
+    let display: DisplayController
     @State private var zoom = ZoomController()
-    @State private var controlsVisible = true
-    @State private var hideTask: Task<Void, Never>?
     @State private var window: NSWindow?
-    @State private var layoutLocked = false
     @State private var spotlightID: UUID?
+    @State private var cursorTask: Task<Void, Never>?
 
     var body: some View {
-        ZStack(alignment: .top) {
-            ZoomableView(controller: zoom) {
-                PresentationCanvas(receiver: receiver, settings: settings, store: store,
-                                   layoutLocked: layoutLocked, spotlightID: spotlightID) { id in
-                    withAnimation(.spring(duration: 0.45)) {
-                        spotlightID = spotlightID == id ? nil : id
-                    }
+        ZoomableView(controller: zoom) {
+            PresentationCanvas(receiver: receiver, settings: settings, store: store,
+                               layoutLocked: display.stageLocked, spotlightID: spotlightID) { id in
+                withAnimation(.spring(duration: 0.45)) {
+                    spotlightID = spotlightID == id ? nil : id
                 }
             }
-            .ignoresSafeArea()
-
-            if controlsVisible {
-                PresentationControls(settings: settings, store: store, receiver: receiver, zoom: zoom,
-                                     layoutLocked: $layoutLocked, window: window)
-                    .padding(.top, 14)
-                    .transition(.move(edge: .top).combined(with: .opacity))
-            }
         }
-        .background(WindowAccessor { window = $0 })
+        .ignoresSafeArea()
+        .background(ZoomShortcuts(zoom: zoom))
+        .background(WindowAccessor {
+            window = $0
+            display.outputWindow = $0
+        })
         .frame(minWidth: 800, minHeight: 500)
         .onContinuousHover { phase in
             if case .active = phase {
-                showControls()
+                hideCursorWhenIdle()
             }
-        }
-        .onAppear {
-            showControls()
         }
         .onChange(of: receiver.visibleDevices.map(\.id)) { _, ids in
             // A reconnecting iPad gets a new ID; a stale spotlight would dim and lock every device.
@@ -60,15 +51,12 @@ struct PresentationView: View {
         }
     }
 
-    private func showControls() {
-        if !controlsVisible {
-            withAnimation(.easeOut(duration: 0.2)) { controlsVisible = true }
-        }
-        hideTask?.cancel()
-        hideTask = Task { @MainActor in
+    /// The pointer would sit on top of the presentation; it hides until the mouse moves again.
+    private func hideCursorWhenIdle() {
+        cursorTask?.cancel()
+        cursorTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(2.5))
             guard !Task.isCancelled else { return }
-            withAnimation(.easeIn(duration: 0.3)) { controlsVisible = false }
             NSCursor.setHiddenUntilMouseMoves(true)
         }
     }
@@ -266,126 +254,6 @@ enum BackgroundImageCache {
         let image = NSImage(contentsOfFile: path)
         images[path] = image
         return image
-    }
-}
-
-private struct PresentationControls: View {
-    @Bindable var settings: AppSettings
-    let store: DeviceSettingsStore
-    let receiver: Receiver
-    let zoom: ZoomController
-    @Binding var layoutLocked: Bool
-    let window: NSWindow?
-
-    var body: some View {
-        HStack(spacing: 14) {
-            Button {
-                withAnimation(.spring(duration: 0.5)) { store.resetLayout() }
-            } label: {
-                Label("Anordnen", systemImage: "square.grid.2x2")
-            }
-            .help("Alle Geräte automatisch anordnen")
-
-            Toggle(isOn: $layoutLocked) {
-                Label("Fixieren", systemImage: layoutLocked ? "lock.fill" : "lock.open")
-            }
-            .toggleStyle(.button)
-            .help("Anordnung gegen versehentliches Verschieben sperren")
-
-            Menu {
-                Picker("Hintergrund", selection: $settings.backgroundKind) {
-                    ForEach(BackgroundKind.allCases) { Text($0.title).tag($0) }
-                }
-                .pickerStyle(.inline)
-                Button("Bild wählen …", action: chooseImage)
-                Toggle("Bild füllt Bildschirm", isOn: $settings.backgroundImageFills)
-            } label: {
-                Label("Hintergrund", systemImage: "photo")
-            }
-
-            ColorPicker("", selection: colorBinding(\.backgroundColor))
-                .labelsHidden()
-                .help("Hintergrundfarbe")
-            if settings.backgroundKind == .gradient {
-                ColorPicker("", selection: colorBinding(\.gradientEndColor))
-                    .labelsHidden()
-                    .help("Zweite Verlaufsfarbe")
-            }
-
-            Menu {
-                Picker("Rahmen", selection: $settings.defaultFrameStyle) {
-                    ForEach(FrameStyle.allCases) { Text($0.title).tag($0) }
-                }
-                .pickerStyle(.inline)
-                Picker("Farbe", selection: $settings.defaultFrameColor) {
-                    ForEach(FrameColor.allCases) { Text($0.title).tag($0) }
-                }
-                Toggle("Namen anzeigen", isOn: $settings.showNames)
-            } label: {
-                Label("Rahmen", systemImage: "ipad")
-            }
-
-            Divider().frame(height: 18)
-
-            Button { zoom.reset() } label: {
-                Label("\(Int(zoom.magnification * 100)) %", systemImage: "magnifyingglass")
-                    .monospacedDigit()
-            }
-            .help("Zoom zurücksetzen (Pinch oder ⌥ + Scrollen zum Zoomen)")
-
-            Menu {
-                ForEach(Array(NSScreen.screens.enumerated()), id: \.offset) { index, screen in
-                    Button(screen.localizedName.isEmpty ? "Bildschirm \(index + 1)" : screen.localizedName) {
-                        move(to: screen)
-                    }
-                }
-            } label: {
-                Label("Bildschirm", systemImage: "display.2")
-            }
-
-            Button {
-                window?.toggleFullScreen(nil)
-            } label: {
-                Label("Vollbild", systemImage: "arrow.up.left.and.arrow.down.right")
-            }
-            .keyboardShortcut("f", modifiers: [.command, .control])
-        }
-        .labelStyle(.titleAndIcon)
-        .buttonStyle(.borderless)
-        .menuStyle(.borderlessButton)
-        .fixedSize()
-        .padding(.horizontal, 16)
-        .padding(.vertical, 9)
-        .background(.regularMaterial, in: Capsule())
-        .shadow(color: .black.opacity(0.3), radius: 12, y: 4)
-    }
-
-    private func colorBinding(_ keyPath: ReferenceWritableKeyPath<AppSettings, CodableColor>) -> Binding<Color> {
-        Binding(
-            get: { Color(nsColor: settings[keyPath: keyPath].nsColor) },
-            set: { settings[keyPath: keyPath] = CodableColor(NSColor($0)) })
-    }
-
-    private func chooseImage() {
-        let panel = NSOpenPanel()
-        panel.allowedContentTypes = [.image]
-        panel.allowsMultipleSelection = false
-        if panel.runModal() == .OK, let url = panel.url {
-            settings.backgroundImagePath = url.path
-            settings.backgroundKind = .image
-        }
-    }
-
-    private func move(to screen: NSScreen) {
-        guard let window else { return }
-        let wasFullScreen = window.styleMask.contains(.fullScreen)
-        if wasFullScreen {
-            window.toggleFullScreen(nil)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + (wasFullScreen ? 0.8 : 0)) {
-            window.setFrame(screen.visibleFrame, display: true)
-            window.toggleFullScreen(nil)
-        }
     }
 }
 

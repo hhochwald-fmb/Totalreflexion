@@ -106,6 +106,40 @@ enum BackgroundKind: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+/// Where the iPads appear. Exactly one view is active at a time.
+enum ViewMode: String, CaseIterable, Identifiable {
+    case grid
+    case stage
+    case floating
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .grid: "Raster"
+        case .stage: "Bühne"
+        case .floating: "Frei schwebend"
+        }
+    }
+
+    var explanation: String {
+        switch self {
+        case .grid: "Ein Fenster, alle iPads automatisch nebeneinander."
+        case .stage: "Hintergrund füllt den Bildschirm, iPads frei verschieben – ideal für den Beamer."
+        case .floating: "Jedes iPad als eigenes Fenster auf dem Schreibtisch, auf Wunsch über allen Apps."
+        }
+    }
+
+    /// The SwiftUI window showing this view; floating devices use their own panels instead.
+    var windowID: String? {
+        switch self {
+        case .grid: "grid"
+        case .stage: "stage"
+        case .floating: nil
+        }
+    }
+}
+
 /// App-wide settings, persisted in UserDefaults.
 @MainActor
 @Observable
@@ -125,8 +159,7 @@ final class AppSettings {
     var gradientEndColor: CodableColor { didSet { store(gradientEndColor, "bgGradientEnd") } }
     var backgroundImagePath: String? { didSet { defaults.set(backgroundImagePath, forKey: "bgImage") } }
     var backgroundImageFills: Bool { didSet { defaults.set(backgroundImageFills, forKey: "bgImageFills") } }
-    /// Each iPad in its own borderless window instead of the main window.
-    var floatingWindows: Bool { didSet { defaults.set(floatingWindows, forKey: "floatingWindows") } }
+    var viewMode: ViewMode { didSet { defaults.set(viewMode.rawValue, forKey: "viewMode") } }
     var floatOnTop: Bool { didSet { defaults.set(floatOnTop, forKey: "floatOnTop") } }
 
     init() {
@@ -143,7 +176,8 @@ final class AppSettings {
         gradientEndColor = Self.load("bgGradientEnd", defaults) ?? CodableColor(red: 0.02, green: 0.03, blue: 0.07)
         backgroundImagePath = defaults.string(forKey: "bgImage")
         backgroundImageFills = defaults.object(forKey: "bgImageFills") as? Bool ?? true
-        floatingWindows = defaults.bool(forKey: "floatingWindows")
+        viewMode = ViewMode(rawValue: defaults.string(forKey: "viewMode") ?? "")
+            ?? (defaults.bool(forKey: "floatingWindows") ? .floating : .grid)
         floatOnTop = defaults.object(forKey: "floatOnTop") as? Bool ?? true
     }
 

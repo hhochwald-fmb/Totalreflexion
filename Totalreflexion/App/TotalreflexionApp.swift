@@ -17,7 +17,7 @@ struct TotalreflexionApp: App {
         _store = State(initialValue: store)
         _receiver = State(initialValue: receiver)
         _display = State(initialValue: display)
-        // Started here rather than by a window, since the app may run without its main window.
+        // Started here rather than by a window, since any window may be closed.
         Task { @MainActor in
             receiver.start()
             display.start()
@@ -25,26 +25,33 @@ struct TotalreflexionApp: App {
     }
 
     var body: some Scene {
-        Window("Totalreflexion", id: "main") {
-            OverviewView(receiver: receiver, settings: settings, store: store, display: display)
+        // The control window opens at launch and then opens the active view.
+        Window("Totalreflexion", id: "control") {
+            ControlView(receiver: receiver, settings: settings, store: store, display: display)
+                .environment(help)
+        }
+        .defaultSize(width: 480, height: 780)
+        .defaultPosition(.topTrailing)
+        .keyboardShortcut("1", modifiers: .command)
+        .commands {
+            ControlCommands()
+            HelpCommands(navigator: help)
+        }
+
+        // The views are opened and closed by the control window only, hence not in the Window menu.
+        Window("Raster", id: "grid") {
+            GridView(receiver: receiver, settings: settings, store: store, display: display)
                 .environment(help)
         }
         .defaultSize(width: 1200, height: 800)
-        .commands { HelpCommands(navigator: help) }
+        .commandsRemoved()
 
-        Window("Geräte", id: "manager") {
-            ManagerView(receiver: receiver, settings: settings, store: store, display: display)
-                .environment(help)
-        }
-        .defaultSize(width: 460, height: 520)
-        .keyboardShortcut("g", modifiers: [.command, .shift])
-
-        Window("Präsentation", id: "presentation") {
-            PresentationView(receiver: receiver, settings: settings, store: store)
+        Window("Bühne", id: "stage") {
+            StageView(receiver: receiver, settings: settings, store: store, display: display)
         }
         .defaultSize(width: 1280, height: 800)
         .windowStyle(.hiddenTitleBar)
-        .keyboardShortcut("p", modifiers: [.command, .shift])
+        .commandsRemoved()
 
         Window("Totalreflexion-Hilfe", id: "help") {
             HelpView()
@@ -53,12 +60,7 @@ struct TotalreflexionApp: App {
         .defaultSize(width: 940, height: 680)
 
         MenuBarExtra("Totalreflexion", systemImage: "airplayvideo") {
-            MenuBarContent(receiver: receiver, settings: settings, store: store, display: display)
-                .environment(help)
-        }
-
-        Settings {
-            SettingsView(receiver: receiver, settings: settings)
+            MenuBarContent(receiver: receiver)
         }
     }
 }

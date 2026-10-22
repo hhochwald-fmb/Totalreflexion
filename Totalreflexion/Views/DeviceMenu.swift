@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Per-device options, used as context menu and as the "…" button on each device.
+/// Per-device options, used as context menu on each device and as the "…" menu in the control window.
 struct DeviceMenuItems: View {
     let device: MirroredDevice
     let store: DeviceSettingsStore
@@ -43,34 +43,16 @@ struct DeviceMenuItems: View {
     }
 }
 
-/// Name tag plus hover controls around a device.
+/// Name tag, status overlay and context menu around a device.
 struct DeviceChrome: ViewModifier {
     let device: MirroredDevice
     let store: DeviceSettingsStore
     let showName: Bool
-    @State private var hovering = false
     @State private var renaming = false
     @State private var newName = ""
 
     func body(content: Content) -> some View {
         content
-            .overlay(alignment: .topTrailing) {
-                if hovering {
-                    Menu {
-                        DeviceMenuItems(device: device, store: store, onRename: startRename)
-                    } label: {
-                        Image(systemName: "ellipsis.circle.fill")
-                            .font(.title2)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.white, .black.opacity(0.55))
-                    }
-                    .menuStyle(.borderlessButton)
-                    .menuIndicator(.hidden)
-                    .fixedSize()
-                    .padding(10)
-                    .transition(.opacity)
-                }
-            }
             .overlay {
                 if device.isSuspended {
                     Label("Bildschirm gesperrt", systemImage: "lock.fill")
@@ -96,9 +78,6 @@ struct DeviceChrome: ViewModifier {
             }
             .contextMenu {
                 DeviceMenuItems(device: device, store: store, onRename: startRename)
-            }
-            .onHover { inside in
-                withAnimation(.easeInOut(duration: 0.15)) { hovering = inside }
             }
             .deviceRenameAlert(device, store: store, isPresented: $renaming, name: $newName)
     }

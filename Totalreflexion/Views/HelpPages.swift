@@ -9,11 +9,11 @@ struct HelpPage: View {
             switch topic {
             case .overview: OverviewHelp()
             case .connect: ConnectHelp()
+            case .control: ControlHelp()
             case .views: ViewsHelp()
-            case .mainWindow: MainWindowHelp()
-            case .presentation: PresentationHelp()
+            case .grid: GridHelp()
+            case .stage: StageHelp()
             case .floating: FloatingHelp()
-            case .devices: DevicesHelp()
             case .appearance: AppearanceHelp()
             case .shortcuts: ShortcutsHelp()
             case .troubleshooting: TroubleshootingHelp()
@@ -30,6 +30,12 @@ private struct OverviewHelp: View {
         HelpHeader(topic: .overview, intro: "Totalreflexion macht deinen Mac zum AirPlay-Empfänger: iPads (und iPhones) "
                    + "zeigen ihren Bildschirm drahtlos auf dem Mac – auch mehrere gleichzeitig. Gedacht für Vorführungen, "
                    + "Unterricht und Präsentationen.")
+        HelpSection(title: "Das Prinzip") {
+            HelpText("**Ein Steuerfenster für alles.** Dort wählst du die Ansicht, steuerst jedes iPad und stellst Rahmen, "
+                     + "Hintergrund und Empfänger ein. Die Ansicht selbst zeigt nur die iPads – dort wirkt nur die Maus: "
+                     + "ziehen, Doppelklick, Rechtsklick.")
+            OpenControlButton()
+        }
         HelpSection(title: "Das kann Totalreflexion") {
             LazyVGrid(columns: columns, spacing: 12) {
                 HelpCard(icon: "ipad.and.iphone", title: "Mehrere iPads",
@@ -37,8 +43,8 @@ private struct OverviewHelp: View {
                 HelpCard(icon: "rotate.right", title: "Dreht sich mit",
                          text: "Hoch- und Querformat folgen dem iPad automatisch.")
                 HelpCard(icon: "rectangle.3.group", title: "Drei Ansichten",
-                         text: "Hauptfenster, Präsentation mit Hintergrund oder frei schwebende Fenster.")
-                HelpCard(icon: "eye", title: "Geräte verwalten",
+                         text: "Raster, Bühne mit Hintergrund oder frei schwebende Fenster.")
+                HelpCard(icon: "eye", title: "iPads einzeln steuern",
                          text: "Ein- und ausblenden, Vollbild, umbenennen, stummschalten, trennen.")
                 HelpCard(icon: "ipad", title: "iPad-Rahmen",
                          text: "Randlos, mit Home-Button, in sechs Farben – oder ein eigenes Mockup-Bild.")
@@ -53,15 +59,13 @@ private struct OverviewHelp: View {
         HelpSection(title: "So fängst du an") {
             HelpSteps(steps: [
                 "**iPad verbinden:** Kontrollzentrum › Bildschirmsynchronisierung › „Totalreflexion“.",
-                "**Ansicht wählen:** Hauptfenster zum Zuschauen, Präsentation für den Beamer, eigene Fenster für den "
-                    + "Schreibtisch oder über PowerPoint.",
-                "**Verwalten:** Im Geräte-Fenster (⇧⌘G) blendest du iPads ein und aus oder holst eines ins Vollbild."
+                "**Ansicht wählen:** Im Steuerfenster oben **Raster**, **Bühne** oder **Frei schwebend** anklicken.",
+                "**iPads steuern:** In der Liste im Steuerfenster ein- und ausblenden oder ins Vollbild holen."
             ])
             HelpTopicLink(topic: .connect)
             HelpTopicLink(topic: .views)
         }
-        HelpTip("Diese Hilfe findest du jederzeit im Menü **Hilfe** (⌘?), über das **?** im Geräte-Fenster "
-                + "und über das Totalreflexion-Symbol in der Menüleiste.")
+        HelpTip("Diese Hilfe findest du jederzeit im Menü **Hilfe** (⌘?) und über das **?** oben im Steuerfenster.")
     }
 }
 
@@ -76,168 +80,154 @@ private struct ConnectHelp: View {
                 "**Bildschirmsynchronisierung** antippen (Symbol mit zwei Rechtecken).",
                 "**Totalreflexion** auswählen. Nach ein bis zwei Sekunden erscheint das iPad auf dem Mac."
             ])
-            HelpText("Weitere iPads verbindest du genauso – sie erscheinen alle gleichzeitig.")
+            HelpText("Weitere iPads verbindest du genauso – sie erscheinen alle gleichzeitig und stehen in der Liste "
+                     + "im Steuerfenster.")
         }
         HelpSection(title: "Trennen") {
             HelpText("Auf dem iPad: Kontrollzentrum › Bildschirmsynchronisierung › **Synchronisierung stoppen**. "
-                     + "Oder auf dem Mac: Rechtsklick auf das iPad › **Verbindung trennen**.")
+                     + "Oder im Steuerfenster: **…** neben dem iPad › **Verbindung trennen**.")
         }
-        HelpTip("Der Name in der AirPlay-Liste lässt sich ändern: **Einstellungen** (⌘,) › Empfänger › "
-                + "„Name im AirPlay-Menü“.")
+        HelpTip("Der Name in der AirPlay-Liste lässt sich ändern: Steuerfenster › ganz unten **Empfänger** aufklappen.")
         HelpTip("Steht dein Mac zweimal in der Liste (z. B. „Totalreflexion“ und „…s iMac“), ist der zweite Eintrag "
                 + "der eingebaute AirPlay-Empfänger von macOS. Wähle **Totalreflexion**.")
     }
 }
 
+private struct ControlHelp: View {
+    var body: some View {
+        HelpHeader(topic: .control, intro: "Das Steuerfenster „Totalreflexion“ ist die eine Stelle, an der du alles "
+                   + "einstellst. Es öffnet sich beim Start. Geschlossen? **⌘1**, ⌘, oder das Symbol in der Menüleiste "
+                   + "holen es zurück.")
+        HelpSection(title: "Von oben nach unten") {
+            HelpTable(rows: [
+                ("Status", "Grüner Punkt = bereit, mit Anzahl der verbundenen iPads. Das **?** öffnet diese Hilfe."),
+                ("Ansicht", "**Raster**, **Bühne** oder **Frei schwebend** – immer genau eine ist aktiv. Darunter die "
+                    + "Optionen der gewählten Ansicht, z. B. Fenster zeigen, Bildschirm, Vollbild, Anordnen."),
+                ("iPads", "Jedes verbundene iPad mit Live-Vorschau (siehe unten)."),
+                ("Rahmen", "Rahmen, Farbe, eigenes Rahmenbild und Namen – für alle iPads."),
+                ("Hintergrund", "Nur bei der Bühne: Farbe, Verlauf oder Bild."),
+                ("Empfänger", "Aufklappen für Name, Auflösung, Bildrate und Ton.")
+            ])
+        }
+        HelpSection(title: "Pro iPad in der Liste") {
+            HelpTable(rows: [
+                ("👁 Auge", "Ein- und ausblenden. Der Ton läuft weiter. Nach neuem Verbinden ist das iPad wieder sichtbar."),
+                ("Vollbild", "Nur dieses iPad füllt den Bildschirm – egal welche Ansicht. Mit mehreren Bildschirmen: "
+                    + "Knopf **gedrückt halten** und Bildschirm wählen. Esc oder Doppelklick beendet."),
+                ("…", "Rahmen und Farbe nur für dieses iPad, drehen (z. B. im Ständer), stumm, umbenennen, trennen.")
+            ])
+            HelpText("Dasselbe Menü wie „…“ bekommst du auch mit **Rechtsklick** direkt auf ein iPad in der Ansicht.")
+        }
+    }
+}
+
 private struct ViewsHelp: View {
     var body: some View {
-        HelpHeader(topic: .views, intro: "Totalreflexion zeigt die iPads auf drei Arten. **Hauptfenster** und "
-                   + "**Eigene Fenster** sind die zwei Grundmodi – du schaltest zwischen ihnen um. Die **Präsentation** "
-                   + "öffnest du bei Bedarf zusätzlich.")
-        HelpCard(icon: "square.grid.2x2", title: "1 · Hauptfenster",
-                 text: "Ein normales Mac-Fenster. Alle iPads stehen automatisch nebeneinander, so groß wie möglich. "
-                     + "Gut zum Zuschauen und Arbeiten.", windowID: "main", buttonTitle: "Hauptfenster öffnen")
-        HelpCard(icon: "play.rectangle.on.rectangle", title: "2 · Präsentation",
-                 text: "Eine Bühne für Beamer oder zweiten Bildschirm: Ein Hintergrund (Farbe, Verlauf oder Bild) füllt "
-                     + "den Bildschirm, die iPads verschiebst und vergrößerst du frei mit der Maus.",
-                 windowID: "presentation", buttonTitle: "Präsentation öffnen (⇧⌘P)")
-        HelpCard(icon: "macwindow.on.rectangle", title: "3 · Eigene Fenster",
-                 text: "Wie bei AirServer: kein Hauptfenster. Jedes iPad schwebt als eigenes, randloses Fenster auf dem "
-                     + "Schreibtisch – auf Wunsch über allen anderen Programmen, z. B. über PowerPoint.",
-                 windowID: "manager", buttonTitle: "Im Geräte-Fenster einschalten")
-        HelpSection(title: "Umschalten") {
-            HelpTable(rows: [
-                ("Hauptfenster ↔ Eigene Fenster", "Geräte-Fenster (⇧⌘G) › oben **Anzeige**. Oder Menüleisten-Symbol › "
-                    + "**Eigene Fenster**."),
-                ("Präsentation öffnen", "⇧⌘P, Knopf **Präsentation** im Haupt- oder Geräte-Fenster, oder Menüleiste."),
-                ("Präsentation beenden", "Esc verlässt das Vollbild, ⌘W schließt das Fenster.")
-            ])
-        }
+        HelpHeader(topic: .views, intro: "Die Ansicht bestimmt, wo die iPads erscheinen. Du wählst sie im Steuerfenster "
+                   + "ganz oben. Es ist **immer genau eine Ansicht aktiv** – beim Umschalten schließt sich die vorige.")
+        HelpCard(icon: "square.grid.2x2", title: "Raster",
+                 text: "Ein normales Fenster. Alle iPads stehen automatisch nebeneinander, so groß wie möglich. "
+                     + "Gut zum Zuschauen und Arbeiten.")
+        HelpCard(icon: "play.rectangle.on.rectangle", title: "Bühne",
+                 text: "Für Beamer oder zweiten Bildschirm: Ein Hintergrund (Farbe, Verlauf oder Bild) füllt den "
+                     + "Bildschirm, die iPads verschiebst und vergrößerst du frei mit der Maus.")
+        HelpCard(icon: "macwindow.on.rectangle", title: "Frei schwebend",
+                 text: "Wie bei AirServer: kein großes Fenster. Jedes iPad schwebt als eigenes, randloses Fenster auf "
+                     + "dem Schreibtisch – auf Wunsch über allen anderen Programmen, z. B. über PowerPoint.")
+        OpenControlButton()
         HelpSection(title: "Welche Ansicht passt?") {
             HelpTable(rows: [
-                ("Nur sehen, was auf den iPads passiert", "**Hauptfenster**"),
-                ("iPads über den Beamer zeigen", "**Präsentation**, dort mit **Vollbild** und **Bildschirm** auf den Beamer"),
-                ("PowerPoint-Folie hinter den iPads", "**Präsentation** › Hintergrund › **Bild wählen …** (die Folie "
-                    + "vorher in PowerPoint als Bild exportieren) – oder **Eigene Fenster** mit „Immer im Vordergrund“ "
-                    + "über der laufenden Bildschirmpräsentation"),
-                ("iPads frei neben anderen Programmen", "**Eigene Fenster**")
+                ("Nur sehen, was auf den iPads passiert", "**Raster**"),
+                ("iPads über den Beamer zeigen", "**Bühne**, dann im Steuerfenster **Bildschirm** › Beamer"),
+                ("PowerPoint-Folie hinter den iPads", "**Bühne** mit Hintergrund **Bild** (die Folie vorher in "
+                    + "PowerPoint als Bild exportieren) – oder **Frei schwebend** mit „Immer im Vordergrund“ über der "
+                    + "laufenden Bildschirmpräsentation"),
+                ("iPads frei neben anderen Programmen", "**Frei schwebend**")
             ])
         }
+        HelpTopicLink(topic: .grid)
+        HelpTopicLink(topic: .stage)
+        HelpTopicLink(topic: .floating)
     }
 }
 
-private struct MainWindowHelp: View {
+private struct GridHelp: View {
     var body: some View {
-        HelpHeader(topic: .mainWindow, intro: "Das Hauptfenster ordnet alle sichtbaren iPads automatisch an. Kommt ein "
-                   + "iPad dazu oder wird eines gedreht, ordnet sich das Raster neu.")
-        HelpSection(title: "Bedienung") {
+        HelpHeader(topic: .grid, intro: "Das Raster ordnet alle sichtbaren iPads automatisch in einem Fenster an. Kommt "
+                   + "ein iPad dazu oder wird eines gedreht, ordnet sich das Raster neu.")
+        HelpSection(title: "Im Steuerfenster") {
             HelpTable(rows: [
-                ("Doppelklick", "Zeigt nur dieses iPad (Fokus). **Esc** oder **Alle zeigen** kehrt zurück."),
+                ("Zeigen", "Holt das Raster-Fenster nach vorne oder öffnet es wieder, falls du es geschlossen hast."),
+                ("Bildschirm", "Legt das Fenster im Vollbild auf einen anderen Bildschirm (nur bei mehreren Bildschirmen)."),
+                ("Vollbild", "Vollbild ein/aus.")
+            ])
+        }
+        HelpSection(title: "Direkt im Raster") {
+            HelpTable(rows: [
+                ("Doppelklick", "Zeigt nur dieses iPad groß. Nochmal Doppelklick oder **Esc** zeigt wieder alle."),
                 ("Pinch / ⌥ + Scrollen", "Zoomen. Bei Zoom mit zwei Fingern verschieben."),
                 ("⌘+ / ⌘− / ⌘0", "Vergrößern, verkleinern, Zoom zurücksetzen."),
-                ("Maus über iPad", "Oben rechts erscheint **…** mit dem Gerätemenü (auch per Rechtsklick).")
+                ("Rechtsklick", "Menü für dieses iPad.")
             ])
         }
-        HelpSection(title: "Symbolleiste") {
-            HelpTable(rows: [
-                ("Statuspunkt", "Grün = bereit, mit Anzahl der verbundenen Geräte."),
-                ("Rahmen", "Standard-Rahmen und -Farbe für alle iPads, Namen ein/aus."),
-                ("Zoom", "Die drei Zoom-Knöpfe mit aktueller Vergrößerung."),
-                ("Geräte", "Öffnet das Geräte-Fenster."),
-                ("Präsentation", "Öffnet die Präsentation.")
-            ])
-        }
-        HelpTopicLink(topic: .devices)
     }
 }
 
-private struct PresentationHelp: View {
+private struct StageHelp: View {
     var body: some View {
-        HelpHeader(topic: .presentation, intro: "Die Präsentation ist eine Bühne: Der Hintergrund füllt den Bildschirm, "
-                   + "die iPads liegen darüber und lassen sich frei anordnen. Ideal für Beamer und zweite Bildschirme.")
-        HelpSection(title: "iPads anordnen") {
+        HelpHeader(topic: .stage, intro: "Die Bühne ist für Vorführungen: Der Hintergrund füllt den Bildschirm, die iPads "
+                   + "liegen darüber und lassen sich frei anordnen. Ideal für Beamer und zweite Bildschirme.")
+        HelpSection(title: "Im Steuerfenster") {
+            HelpTable(rows: [
+                ("Bildschirm", "Legt die Bühne im Vollbild auf einen Bildschirm, z. B. den Beamer."),
+                ("Vollbild", "Vollbild ein/aus."),
+                ("Anordnung fixieren", "Sperrt die iPads gegen versehentliches Verschieben."),
+                ("Automatisch anordnen", "Verteilt alle iPads neu."),
+                ("Hintergrund", "Farbe, Verlauf oder Bild, mit Vorschau.")
+            ])
+        }
+        HelpSection(title: "Direkt auf der Bühne") {
             HelpTable(rows: [
                 ("Ziehen", "iPad verschieben."),
                 ("Griff unten rechts", "Größe ändern (erscheint, wenn die Maus über dem iPad ist)."),
-                ("Doppelklick", "**Spotlight:** Das iPad kommt groß in die Mitte, die anderen werden abgedunkelt. "
-                    + "Esc beendet."),
-                ("Esc", "Nacheinander: Spotlight beenden → Zoom zurücksetzen → Vollbild verlassen.")
+                ("Doppelklick", "**Spotlight:** Das iPad kommt groß in die Mitte, die anderen werden abgedunkelt."),
+                ("Esc", "Nacheinander: Spotlight beenden → Zoom zurücksetzen → Vollbild verlassen."),
+                ("Rechtsklick", "Menü für dieses iPad.")
             ])
-            HelpText("Die Anordnung wird pro iPad gespeichert und gilt auch beim nächsten Verbinden.")
-        }
-        HelpSection(title: "Die Leiste oben") {
-            HelpText("Sie blendet sich nach ein paar Sekunden aus. **Maus bewegen** holt sie zurück.")
-            HelpTable(rows: [
-                ("Anordnen", "Alle iPads automatisch verteilen."),
-                ("Fixieren", "Sperrt die Anordnung gegen versehentliches Verschieben."),
-                ("Hintergrund", "Farbe, Verlauf oder Bild; „Bild füllt Bildschirm“ schneidet zu statt Ränder zu lassen."),
-                ("Farbfelder", "Hintergrundfarbe und zweite Verlaufsfarbe."),
-                ("Rahmen", "Rahmen, Farbe und Namen für alle iPads."),
-                ("Bildschirm", "Präsentation auf einen anderen Bildschirm (z. B. Beamer) schieben."),
-                ("Vollbild", "Vollbild ein/aus (⌃⌘F).")
-            ])
+            HelpText("Die Anordnung wird pro iPad gespeichert und gilt auch beim nächsten Verbinden. Der Mauszeiger "
+                     + "verschwindet nach ein paar Sekunden ohne Bewegung.")
         }
         HelpTip("**PowerPoint-Folie als Hintergrund:** In PowerPoint die Folie als Bild (PNG oder JPEG) exportieren, "
-                + "dann in der Leiste **Hintergrund › Bild wählen …**.")
+                + "dann im Steuerfenster unter **Hintergrund der Bühne** › Bild › **Wählen …**.")
         HelpTip("Wirkt ein iPad **abgedunkelt** oder lässt sich **nicht verschieben**? Dann ist ein Spotlight aktiv "
-                + "(**Esc**) oder **Fixieren** eingeschaltet (Schloss in der Leiste).")
+                + "(**Esc**) oder **Anordnung fixieren** eingeschaltet.")
     }
 }
 
 private struct FloatingHelp: View {
     var body: some View {
-        HelpHeader(topic: .floating, intro: "Statt eines Hauptfensters bekommt jedes iPad ein eigenes, randloses Fenster. "
-                   + "Die iPads liegen dann frei auf dem Schreibtisch – wie bei AirServer.")
-        HelpSection(title: "Einschalten") {
-            HelpSteps(steps: [
-                "Geräte-Fenster öffnen (⇧⌘G).",
-                "Oben bei **Anzeige** auf **Eigene Fenster** klicken. Das Hauptfenster schließt sich.",
-                "Bei Bedarf **Immer im Vordergrund** einschalten."
+        HelpHeader(topic: .floating, intro: "Jedes iPad bekommt ein eigenes, randloses Fenster und liegt frei auf dem "
+                   + "Schreibtisch – wie bei AirServer. Ein großes Fenster gibt es dann nicht.")
+        HelpSection(title: "Im Steuerfenster") {
+            HelpTable(rows: [
+                ("Immer im Vordergrund", "Die iPads bleiben über anderen Programmen sichtbar."),
+                ("Automatisch anordnen", "Verteilt alle iPad-Fenster nebeneinander auf dem Bildschirm.")
             ])
-            HelpText("Totalreflexion merkt sich den Modus und startet beim nächsten Mal direkt so. Bedient wird dann über "
-                     + "das Geräte-Fenster und das Symbol in der Menüleiste. Zurück geht es mit **Anzeige › Hauptfenster**.")
+            HelpText("Das Steuerfenster kannst du schließen, damit nur noch die iPads zu sehen sind. Totalreflexion "
+                     + "merkt sich die Ansicht und startet beim nächsten Mal wieder so.")
         }
-        HelpSection(title: "Bedienung") {
+        HelpSection(title: "Direkt am iPad") {
             HelpTable(rows: [
                 ("Ziehen", "iPad-Fenster verschieben."),
                 ("Kante oder Griff", "Größe ändern – an einer Kante ziehen oder am Griff unten rechts."),
                 ("Doppelklick", "Vollbild; nochmal Doppelklick oder **Esc** kehrt zurück."),
-                ("Anordnen", "Im Geräte-Fenster: verteilt alle iPad-Fenster nebeneinander.")
+                ("Rechtsklick", "Menü für dieses iPad.")
             ])
             HelpText("Position und Größe werden pro iPad gespeichert.")
         }
         HelpTip("**Über PowerPoint zeigen:** „Immer im Vordergrund“ einschalten, dann in PowerPoint die "
-                + "Bildschirmpräsentation starten. Werden die iPads trotzdem verdeckt, nimm die **Präsentation** mit "
-                + "der Folie als Hintergrundbild.")
-    }
-}
-
-private struct DevicesHelp: View {
-    var body: some View {
-        HelpHeader(topic: .devices, intro: "Im Geräte-Fenster steuerst du jedes verbundene iPad einzeln. Du öffnest es mit "
-                   + "⇧⌘G, über den Knopf **Geräte** im Hauptfenster oder über das Menüleisten-Symbol.")
-        HelpSection(title: "Pro iPad") {
-            HelpTable(rows: [
-                ("👁 Auge", "Ein- und ausblenden – in allen Ansichten. Der Ton läuft weiter. Nach neuem Verbinden ist "
-                    + "das iPad wieder sichtbar."),
-                ("Vollbild", "Das iPad füllt allein den Bildschirm, in jeder Ansicht. Mit mehreren Bildschirmen: Knopf "
-                    + "**gedrückt halten** und Bildschirm wählen. Esc oder Doppelklick beendet."),
-                ("…", "Rahmen, Farbe, nach links/rechts drehen (z. B. für iPads im Ständer), stumm, umbenennen, trennen.")
-            ])
-        }
-        HelpSection(title: "Oben im Fenster") {
-            HelpTable(rows: [
-                ("Anzeige", "Umschalten zwischen **Hauptfenster** und **Eigene Fenster**."),
-                ("Immer im Vordergrund", "Nur bei eigenen Fenstern: iPads bleiben über anderen Programmen."),
-                ("Alle einblenden", "Holt ausgeblendete iPads zurück."),
-                ("Anordnen", "Nur bei eigenen Fenstern: alle iPad-Fenster verteilen."),
-                ("Präsentation", "Öffnet die Präsentation.")
-            ])
-        }
-        HelpSection(title: "Menüleiste") {
-            HelpText("Das Totalreflexion-Symbol in der Menüleiste zeigt den Status und alle iPads – ein Häkchen bedeutet "
-                     + "sichtbar. Von dort öffnest du auch alle Fenster, wenn gerade keines offen ist.")
-        }
+                + "Bildschirmpräsentation starten. Werden die iPads trotzdem verdeckt, nimm die **Bühne** mit der Folie "
+                + "als Hintergrundbild.")
     }
 }
 
@@ -255,13 +245,13 @@ private struct AppearanceHelp: View {
             HelpText("Farben: Space Grau, Silber, Schwarz, Weiß, Blau, Rosé.")
         }
         HelpSection(title: "Für alle oder pro iPad") {
-            HelpText("**Für alle:** Einstellungen (⌘,) › Darstellung, oder das Menü **Rahmen** im Hauptfenster bzw. in "
-                     + "der Präsentation.")
-            HelpText("**Pro iPad:** **…** oder Rechtsklick › Rahmen / Farbe. „Standard“ folgt der Einstellung für alle.")
+            HelpText("**Für alle:** Steuerfenster › Abschnitt **Rahmen**.")
+            HelpText("**Pro iPad:** **…** neben dem iPad oder Rechtsklick auf das iPad › Rahmen / Farbe. „Standard“ "
+                     + "folgt der Einstellung für alle.")
         }
         HelpSection(title: "Eigenes Rahmenbild") {
             HelpText("Ein PNG, dessen Bildschirmbereich durchsichtig ist (typische iPad-Mockups). Wählen unter "
-                     + "Einstellungen › Darstellung › Eigenes Rahmenbild. Den Bildschirmbereich erkennt Totalreflexion "
+                     + "Steuerfenster › Rahmen › Eigenes Rahmenbild. Den Bildschirmbereich erkennt Totalreflexion "
                      + "selbst, und das Bild dreht sich mit dem iPad mit.")
         }
     }
@@ -272,23 +262,20 @@ private struct ShortcutsHelp: View {
         HelpHeader(topic: .shortcuts, intro: "Die wichtigsten Tastenkürzel und Mausgesten auf einen Blick.")
         HelpSection(title: "Tastatur") {
             HelpTable(rows: [
-                ("⇧⌘G", "Geräte-Fenster"),
-                ("⇧⌘P", "Präsentation"),
-                ("⌘,", "Einstellungen"),
+                ("⌘1", "Steuerfenster (auch ⌘,)"),
                 ("⌘?", "Hilfe"),
-                ("⌘+ / ⌘− / ⌘0", "Zoom im Hauptfenster"),
-                ("⌃⌘F", "Vollbild in der Präsentation"),
-                ("Esc", "Zurück: Fokus, Spotlight, Zoom oder Vollbild beenden")
+                ("⌘+ / ⌘− / ⌘0", "Zoom in Raster und Bühne"),
+                ("Esc", "Zurück: Spotlight, Zoom, Vollbild oder Einzelansicht beenden")
             ])
         }
         HelpSection(title: "Maus & Trackpad") {
             HelpTable(rows: [
-                ("Doppelklick", "Hauptfenster: Fokus · Präsentation: Spotlight · Eigene Fenster: Vollbild"),
-                ("Ziehen", "Präsentation und eigene Fenster: iPad verschieben"),
-                ("Griff unten rechts", "Präsentation und eigene Fenster: Größe ändern"),
+                ("Doppelklick", "Raster: ein iPad allein · Bühne: Spotlight · Frei schwebend: Vollbild"),
+                ("Ziehen", "Bühne und frei schwebend: iPad verschieben"),
+                ("Griff unten rechts", "Bühne und frei schwebend: Größe ändern"),
                 ("Pinch / ⌥ + Scrollrad", "Zoomen"),
                 ("Zwei Finger", "Bei Zoom: Ausschnitt verschieben"),
-                ("Rechtsklick", "Gerätemenü des iPads")
+                ("Rechtsklick", "Menü für dieses iPad")
             ])
         }
     }
@@ -300,21 +287,23 @@ private struct TroubleshootingHelp: View {
         HelpSection(title: "„Totalreflexion“ fehlt in der AirPlay-Liste") {
             HelpSteps(steps: [
                 "Mac und iPad im selben WLAN?",
-                "Statuspunkt im Haupt- oder Geräte-Fenster grün? Sonst Einstellungen › Empfänger › **Empfänger neu starten**.",
+                "Statuspunkt oben im Steuerfenster grün? Sonst **Empfänger** aufklappen › **Empfänger neu starten**.",
                 "Systemeinstellungen › Datenschutz & Sicherheit › **Lokales Netzwerk**: Totalreflexion erlauben.",
                 "Fragt die Firewall nach eingehenden Verbindungen: **Erlauben**."
             ])
         }
         HelpSection(title: "Weitere Probleme") {
             HelpTable(rows: [
-                ("iPad abgedunkelt", "Spotlight aktiv – in der Präsentation **Esc** drücken."),
-                ("iPad lässt sich nicht verschieben", "Spotlight aktiv oder **Fixieren** eingeschaltet."),
-                ("iPad fehlt", "Ausgeblendet? Geräte-Fenster › **Alle einblenden**."),
+                ("Kein Fenster mehr zu sehen", "**⌘1** oder Menüleisten-Symbol › **Steuerung öffnen**."),
+                ("Ansicht ist weg", "Im Steuerfenster bei der Ansicht auf **Zeigen** klicken."),
+                ("iPad abgedunkelt", "Spotlight aktiv – auf der Bühne **Esc** drücken."),
+                ("iPad lässt sich nicht verschieben", "Spotlight aktiv oder **Anordnung fixieren** eingeschaltet."),
+                ("iPad fehlt", "Ausgeblendet? Im Steuerfenster bei iPads **Alle einblenden**."),
                 ("„Bildschirm gesperrt“", "Das iPad ist gesperrt – entsperren, dann läuft das Bild weiter."),
                 ("Videos aus Apps starten nicht", "Unterstützt wird die Bildschirmsynchronisierung. Das „Streamen“ "
                     + "einzelner Videos (AirPlay-Symbol in YouTube & Co.) nicht."),
-                ("Kein Ton", "Einstellungen › Empfänger › „Ton wiedergeben“; Gerät stumm (…)? Lautstärke am iPad?"),
-                ("Bild ruckelt", "Einstellungen › Empfänger: kleinere Auflösung oder 30 fps, danach neu starten."),
+                ("Kein Ton", "Empfänger › „Ton wiedergeben“; iPad stumm (…)? Lautstärke am iPad?"),
+                ("Bild ruckelt", "Empfänger: kleinere Auflösung oder 30 fps, danach neu starten."),
                 ("Mac doppelt in der Liste", "Der zweite Eintrag ist der AirPlay-Empfänger von macOS. Abschalten unter "
                     + "Systemeinstellungen › Allgemein › AirDrop & Handoff.")
             ])

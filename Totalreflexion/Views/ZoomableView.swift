@@ -29,6 +29,25 @@ final class ZoomController {
     }
 }
 
+/// Invisible buttons that give a view the zoom shortcuts ⌘+ / ⌘− / ⌘0 without a toolbar.
+struct ZoomShortcuts: View {
+    let zoom: ZoomController
+
+    var body: some View {
+        ZStack {
+            Button("") { zoom.zoom(by: 1.4) }
+                .keyboardShortcut("+", modifiers: .command)
+            Button("") { zoom.zoom(by: 1 / 1.4) }
+                .keyboardShortcut("-", modifiers: .command)
+            Button("") { zoom.reset() }
+                .keyboardShortcut("0", modifiers: .command)
+        }
+        .opacity(0)
+        .frame(width: 0, height: 0)
+        .accessibilityHidden(true)
+    }
+}
+
 /// Wraps SwiftUI content in an NSScrollView with pinch-to-zoom (trackpad), ⌥-scroll zoom and panning.
 /// At zoom 1 the content exactly fills the view; zooming in renders the live video at full resolution.
 struct ZoomableView<Content: View>: NSViewRepresentable {
