@@ -1,0 +1,573 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0EFF90B5F879BC735313D086 /* fairplay_playfair.c in Sources */ = {isa = PBXBuildFile; fileRef = 6A57252C71FC47202EC80088 /* fairplay_playfair.c */; };
+		1FCB7E023DDEC3C108258203 /* ZoomableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F4DBC19562B82D97D36BD7 /* ZoomableView.swift */; };
+		219E9EBD9EF050090CFB5800 /* omg_hax.c in Sources */ = {isa = PBXBuildFile; fileRef = 94D9D53876E623DF77DC4BB6 /* omg_hax.c */; };
+		2635A4550ED393664A7CF1EA /* Receiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D29D227314D6731524CF94 /* Receiver.swift */; };
+		2ABDF33EF2AD10FD2B0DB560 /* TimingAndAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86741A8DF77FABB9803855C4 /* TimingAndAudio.swift */; };
+		38DCBFE72C482D7F3F3ED106 /* RTSPMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18147BC521A27FC085B5EAA /* RTSPMessage.swift */; };
+		3A6CEE656D1311C6D63D7BCB /* VideoSurfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7744104C024EBD2450E5F5 /* VideoSurfaceView.swift */; };
+		404FF00ABB14FBA2BD000BFA /* DeviceSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE87D5620817E200088CD6E /* DeviceSettingsStore.swift */; };
+		43BBBC0B23848586937D86BA /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A9C46A30CC5747ABE3DAC2 /* GridLayout.swift */; };
+		484CFDF3F715A48D8AF6AC59 /* FloatingWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF1F1AF8E6E598A2C459C15 /* FloatingWindows.swift */; };
+		4D8512A4B50627BDDB525F33 /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3876068D988AC88AB8B6F0E0 /* DeviceView.swift */; };
+		566D4883763EF27613327EC1 /* HelpPages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D275FDCEB649D96DA0F6C1E /* HelpPages.swift */; };
+		65E268928EF85458A5CC7ADF /* LICENSE.md in Resources */ = {isa = PBXBuildFile; fileRef = 234694339A7F2D86E0E9849A /* LICENSE.md */; };
+		6EEDB88A7E1B565705A45FE0 /* TotalreflexionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CBDB6CD964EB9347CF62F6 /* TotalreflexionApp.swift */; };
+		73FF954B3E44CB964D45169E /* AirPlaySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092265C9BE554328B1DB4A9E /* AirPlaySession.swift */; };
+		78809FF85B31A9AAE7EA2150 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B6748409E34D4D528E39E /* Crypto.swift */; };
+		7A0BFC8D2D6241816ED5000C /* VideoDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D4CC688FD51FC12698DE54 /* VideoDecoder.swift */; };
+		7F0ADADC4E1B0A09A828000D /* CustomFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C02DFBEEBA4B5BD82E9BB4 /* CustomFrame.swift */; };
+		8C178DA1199E842E6BB88EBA /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F3DC70E714A4CDE321008 /* OverviewView.swift */; };
+		9B545CA3035513D34DD04A57 /* FrameSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438E7CA7B97465FF2E43BB7A /* FrameSource.swift */; };
+		A089057ACA6C7230F628EB99 /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE98EAFB79DDCE03D810306 /* Bonjour.swift */; };
+		A5B0C9C211CF1A9875DC37D6 /* PresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0B4F1FF58912B58F24ABEE /* PresentationView.swift */; };
+		B7AEF9926101DD1FBF58D1AC /* Sockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009A7CCC7A1B178125E57E6C /* Sockets.swift */; };
+		B9B8F8D0A6D57C02859E6A88 /* ServerIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7913C584360D8618E982E713 /* ServerIdentity.swift */; };
+		BBC8995EB69DB5788E3351CA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416F76271986772A6CAECB1 /* SettingsView.swift */; };
+		C5BAF28CF4991B3E59B1CA5C /* MirrorStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8169A48F743F10C749AAECA7 /* MirrorStream.swift */; };
+		C6D3A8E4949F82BFFB60C81D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611579F38542CB66D3EB244B /* Assets.xcassets */; };
+		CD93689A3E199BC0FCDB25D7 /* DeviceMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F7C0245F1EF9D5F5CCEC /* DeviceMenu.swift */; };
+		D43E58EAD29C92CBCC71BAE6 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AF18C81F39F26F3105F810 /* Settings.swift */; };
+		D62047573BAE138AC3EA6B2A /* MirroredDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED476869F494BCAF1D89B8CA /* MirroredDevice.swift */; };
+		E0F586E0C59B85BBA7003776 /* PairingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1423FFCA401A307C54E86814 /* PairingSession.swift */; };
+		E41624C1A4C510E3DE434465 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7254FA6ED4DE69DA0875DA51 /* AudioPlayer.swift */; };
+		F325F44EB1E76AC1380634EB /* playfair.c in Sources */ = {isa = PBXBuildFile; fileRef = 300D5E33852ABB9877A07D30 /* playfair.c */; };
+		F5C391C2DC1598E89F788D65 /* hand_garble.c in Sources */ = {isa = PBXBuildFile; fileRef = E9496F1FEADC7AB337DD820B /* hand_garble.c */; };
+		F8596A96BDA7C7DF832CE55F /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE47AD0B6FADAD144E7B590 /* HelpView.swift */; };
+		FAD8BCF4DF169271395C7311 /* sap_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 368C9F3D108D7DB9F921783D /* sap_hash.c */; };
+		FDFCFCE7F6A4BCBA3E31364E /* ManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCFDA28CE60FA6F8CEC2692 /* ManagerView.swift */; };
+		FE450462BE8B9B2603C2332B /* modified_md5.c in Sources */ = {isa = PBXBuildFile; fileRef = E44FE0CDE90A0454E4EC27EC /* modified_md5.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		009A7CCC7A1B178125E57E6C /* Sockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sockets.swift; sourceTree = "<group>"; };
+		0435A4530675ACDB2C8C7026 /* playfair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = playfair.h; sourceTree = "<group>"; };
+		092265C9BE554328B1DB4A9E /* AirPlaySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlaySession.swift; sourceTree = "<group>"; };
+		1423FFCA401A307C54E86814 /* PairingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingSession.swift; sourceTree = "<group>"; };
+		18AF18C81F39F26F3105F810 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		1D70535393A7F91BFA1269A5 /* Totalreflexion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Totalreflexion.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F2B6748409E34D4D528E39E /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
+		1FE87D5620817E200088CD6E /* DeviceSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsStore.swift; sourceTree = "<group>"; };
+		234694339A7F2D86E0E9849A /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		300D5E33852ABB9877A07D30 /* playfair.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = playfair.c; sourceTree = "<group>"; };
+		31CBDB6CD964EB9347CF62F6 /* TotalreflexionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalreflexionApp.swift; sourceTree = "<group>"; };
+		31D4CC688FD51FC12698DE54 /* VideoDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDecoder.swift; sourceTree = "<group>"; };
+		31ECD91D51CD23ED4FF18091 /* fairplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fairplay.h; sourceTree = "<group>"; };
+		368C9F3D108D7DB9F921783D /* sap_hash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sap_hash.c; sourceTree = "<group>"; };
+		3876068D988AC88AB8B6F0E0 /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
+		438E7CA7B97465FF2E43BB7A /* FrameSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameSource.swift; sourceTree = "<group>"; };
+		457DABA74C752F6996A760A7 /* logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logger.h; sourceTree = "<group>"; };
+		50D29D227314D6731524CF94 /* Receiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Receiver.swift; sourceTree = "<group>"; };
+		50F4DBC19562B82D97D36BD7 /* ZoomableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableView.swift; sourceTree = "<group>"; };
+		60F0F7C0245F1EF9D5F5CCEC /* DeviceMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceMenu.swift; sourceTree = "<group>"; };
+		611579F38542CB66D3EB244B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		68E74DB953D2F45D8A3EE7E5 /* omg_hax.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = omg_hax.h; sourceTree = "<group>"; };
+		6A57252C71FC47202EC80088 /* fairplay_playfair.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fairplay_playfair.c; sourceTree = "<group>"; };
+		704F3DC70E714A4CDE321008 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
+		7254FA6ED4DE69DA0875DA51 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		7913C584360D8618E982E713 /* ServerIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerIdentity.swift; sourceTree = "<group>"; };
+		7EE47AD0B6FADAD144E7B590 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		7EE98EAFB79DDCE03D810306 /* Bonjour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		7FEB87AB83081A96BEB66FC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		80C02DFBEEBA4B5BD82E9BB4 /* CustomFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFrame.swift; sourceTree = "<group>"; };
+		8169A48F743F10C749AAECA7 /* MirrorStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorStream.swift; sourceTree = "<group>"; };
+		86741A8DF77FABB9803855C4 /* TimingAndAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingAndAudio.swift; sourceTree = "<group>"; };
+		8C7744104C024EBD2450E5F5 /* VideoSurfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSurfaceView.swift; sourceTree = "<group>"; };
+		8EF1F1AF8E6E598A2C459C15 /* FloatingWindows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingWindows.swift; sourceTree = "<group>"; };
+		9416F76271986772A6CAECB1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		94D9D53876E623DF77DC4BB6 /* omg_hax.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = omg_hax.c; sourceTree = "<group>"; };
+		9D275FDCEB649D96DA0F6C1E /* HelpPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpPages.swift; sourceTree = "<group>"; };
+		A8A9C46A30CC5747ABE3DAC2 /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
+		BE0B4F1FF58912B58F24ABEE /* PresentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationView.swift; sourceTree = "<group>"; };
+		C128BA62EB29393EE04E1DDF /* Totalreflexion.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Totalreflexion.entitlements; sourceTree = "<group>"; };
+		E18147BC521A27FC085B5EAA /* RTSPMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTSPMessage.swift; sourceTree = "<group>"; };
+		E44FE0CDE90A0454E4EC27EC /* modified_md5.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = modified_md5.c; sourceTree = "<group>"; };
+		E9496F1FEADC7AB337DD820B /* hand_garble.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hand_garble.c; sourceTree = "<group>"; };
+		ED476869F494BCAF1D89B8CA /* MirroredDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirroredDevice.swift; sourceTree = "<group>"; };
+		EF9E717CBAE90155E87CFBE8 /* Totalreflexion-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Totalreflexion-Bridging-Header.h"; sourceTree = "<group>"; };
+		FCCFDA28CE60FA6F8CEC2692 /* ManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0F007303AA4B36DB7F28C093 /* playfair */ = {
+			isa = PBXGroup;
+			children = (
+				E9496F1FEADC7AB337DD820B /* hand_garble.c */,
+				234694339A7F2D86E0E9849A /* LICENSE.md */,
+				E44FE0CDE90A0454E4EC27EC /* modified_md5.c */,
+				94D9D53876E623DF77DC4BB6 /* omg_hax.c */,
+				68E74DB953D2F45D8A3EE7E5 /* omg_hax.h */,
+				300D5E33852ABB9877A07D30 /* playfair.c */,
+				0435A4530675ACDB2C8C7026 /* playfair.h */,
+				368C9F3D108D7DB9F921783D /* sap_hash.c */,
+			);
+			path = playfair;
+			sourceTree = "<group>";
+		};
+		383EE66F7DEAC5DFB39A3FAD /* AirPlay */ = {
+			isa = PBXGroup;
+			children = (
+				092265C9BE554328B1DB4A9E /* AirPlaySession.swift */,
+				7EE98EAFB79DDCE03D810306 /* Bonjour.swift */,
+				1F2B6748409E34D4D528E39E /* Crypto.swift */,
+				8169A48F743F10C749AAECA7 /* MirrorStream.swift */,
+				1423FFCA401A307C54E86814 /* PairingSession.swift */,
+				E18147BC521A27FC085B5EAA /* RTSPMessage.swift */,
+				7913C584360D8618E982E713 /* ServerIdentity.swift */,
+				009A7CCC7A1B178125E57E6C /* Sockets.swift */,
+				86741A8DF77FABB9803855C4 /* TimingAndAudio.swift */,
+			);
+			path = AirPlay;
+			sourceTree = "<group>";
+		};
+		7CE3308D269294E7C5ACC928 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				438E7CA7B97465FF2E43BB7A /* FrameSource.swift */,
+				31D4CC688FD51FC12698DE54 /* VideoDecoder.swift */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		8285FE68215F5D9ABEC7ABFF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				80C02DFBEEBA4B5BD82E9BB4 /* CustomFrame.swift */,
+				1FE87D5620817E200088CD6E /* DeviceSettingsStore.swift */,
+				ED476869F494BCAF1D89B8CA /* MirroredDevice.swift */,
+				50D29D227314D6731524CF94 /* Receiver.swift */,
+				18AF18C81F39F26F3105F810 /* Settings.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B33AFC437C52EB7EEA3C07D1 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				EF9E717CBAE90155E87CFBE8 /* Totalreflexion-Bridging-Header.h */,
+				31CBDB6CD964EB9347CF62F6 /* TotalreflexionApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		C0A395E68741A24B35DE5BD6 /* Totalreflexion */ = {
+			isa = PBXGroup;
+			children = (
+				383EE66F7DEAC5DFB39A3FAD /* AirPlay */,
+				B33AFC437C52EB7EEA3C07D1 /* App */,
+				DD2BAAC88775BF1A65D63B3C /* Audio */,
+				C82E981593C9B8C9DAE35167 /* FairPlay */,
+				8285FE68215F5D9ABEC7ABFF /* Model */,
+				E9F048C0127F317B2DD75ACF /* Resources */,
+				7CE3308D269294E7C5ACC928 /* Video */,
+				D8C1F2C6F4C5DA5B62BAD42B /* Views */,
+			);
+			path = Totalreflexion;
+			sourceTree = "<group>";
+		};
+		C82E981593C9B8C9DAE35167 /* FairPlay */ = {
+			isa = PBXGroup;
+			children = (
+				6A57252C71FC47202EC80088 /* fairplay_playfair.c */,
+				31ECD91D51CD23ED4FF18091 /* fairplay.h */,
+				457DABA74C752F6996A760A7 /* logger.h */,
+				0F007303AA4B36DB7F28C093 /* playfair */,
+			);
+			path = FairPlay;
+			sourceTree = "<group>";
+		};
+		CA383CE4B0CE984AE281307C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D70535393A7F91BFA1269A5 /* Totalreflexion.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CB5AFF35A2534325441C4854 = {
+			isa = PBXGroup;
+			children = (
+				C0A395E68741A24B35DE5BD6 /* Totalreflexion */,
+				CA383CE4B0CE984AE281307C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D8C1F2C6F4C5DA5B62BAD42B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				60F0F7C0245F1EF9D5F5CCEC /* DeviceMenu.swift */,
+				3876068D988AC88AB8B6F0E0 /* DeviceView.swift */,
+				8EF1F1AF8E6E598A2C459C15 /* FloatingWindows.swift */,
+				A8A9C46A30CC5747ABE3DAC2 /* GridLayout.swift */,
+				9D275FDCEB649D96DA0F6C1E /* HelpPages.swift */,
+				7EE47AD0B6FADAD144E7B590 /* HelpView.swift */,
+				FCCFDA28CE60FA6F8CEC2692 /* ManagerView.swift */,
+				704F3DC70E714A4CDE321008 /* OverviewView.swift */,
+				BE0B4F1FF58912B58F24ABEE /* PresentationView.swift */,
+				9416F76271986772A6CAECB1 /* SettingsView.swift */,
+				8C7744104C024EBD2450E5F5 /* VideoSurfaceView.swift */,
+				50F4DBC19562B82D97D36BD7 /* ZoomableView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DD2BAAC88775BF1A65D63B3C /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				7254FA6ED4DE69DA0875DA51 /* AudioPlayer.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		E9F048C0127F317B2DD75ACF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				611579F38542CB66D3EB244B /* Assets.xcassets */,
+				7FEB87AB83081A96BEB66FC3 /* Info.plist */,
+				C128BA62EB29393EE04E1DDF /* Totalreflexion.entitlements */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		670BEA247BF5F673036EB314 /* Totalreflexion */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD4A42F6F165251F142EC566 /* Build configuration list for PBXNativeTarget "Totalreflexion" */;
+			buildPhases = (
+				9841235ADA12AD98E4AEB604 /* SwiftLint */,
+				48B87B38406290DDEC745790 /* Sources */,
+				A4EB65A1171968B0A06AE779 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Totalreflexion;
+			packageProductDependencies = (
+			);
+			productName = Totalreflexion;
+			productReference = 1D70535393A7F91BFA1269A5 /* Totalreflexion.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4F435B458F21079837DD600C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					670BEA247BF5F673036EB314 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 431F93F8010483DCAA1F2F46 /* Build configuration list for PBXProject "Totalreflexion" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CB5AFF35A2534325441C4854;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CA383CE4B0CE984AE281307C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				670BEA247BF5F673036EB314 /* Totalreflexion */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A4EB65A1171968B0A06AE779 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6D3A8E4949F82BFFB60C81D /* Assets.xcassets in Resources */,
+				65E268928EF85458A5CC7ADF /* LICENSE.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9841235ADA12AD98E4AEB604 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Xcode build scripts don't inherit the shell PATH, so add Homebrew (Apple Silicon + Intel).\nexport PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\nif command -v swiftlint >/dev/null 2>&1; then\n  cd \"$SRCROOT\" && swiftlint lint --quiet\nelse\n  echo \"warning: SwiftLint nicht installiert - brew install swiftlint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		48B87B38406290DDEC745790 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73FF954B3E44CB964D45169E /* AirPlaySession.swift in Sources */,
+				E41624C1A4C510E3DE434465 /* AudioPlayer.swift in Sources */,
+				A089057ACA6C7230F628EB99 /* Bonjour.swift in Sources */,
+				78809FF85B31A9AAE7EA2150 /* Crypto.swift in Sources */,
+				7F0ADADC4E1B0A09A828000D /* CustomFrame.swift in Sources */,
+				CD93689A3E199BC0FCDB25D7 /* DeviceMenu.swift in Sources */,
+				404FF00ABB14FBA2BD000BFA /* DeviceSettingsStore.swift in Sources */,
+				4D8512A4B50627BDDB525F33 /* DeviceView.swift in Sources */,
+				484CFDF3F715A48D8AF6AC59 /* FloatingWindows.swift in Sources */,
+				9B545CA3035513D34DD04A57 /* FrameSource.swift in Sources */,
+				43BBBC0B23848586937D86BA /* GridLayout.swift in Sources */,
+				566D4883763EF27613327EC1 /* HelpPages.swift in Sources */,
+				F8596A96BDA7C7DF832CE55F /* HelpView.swift in Sources */,
+				FDFCFCE7F6A4BCBA3E31364E /* ManagerView.swift in Sources */,
+				C5BAF28CF4991B3E59B1CA5C /* MirrorStream.swift in Sources */,
+				D62047573BAE138AC3EA6B2A /* MirroredDevice.swift in Sources */,
+				8C178DA1199E842E6BB88EBA /* OverviewView.swift in Sources */,
+				E0F586E0C59B85BBA7003776 /* PairingSession.swift in Sources */,
+				A5B0C9C211CF1A9875DC37D6 /* PresentationView.swift in Sources */,
+				38DCBFE72C482D7F3F3ED106 /* RTSPMessage.swift in Sources */,
+				2635A4550ED393664A7CF1EA /* Receiver.swift in Sources */,
+				B9B8F8D0A6D57C02859E6A88 /* ServerIdentity.swift in Sources */,
+				D43E58EAD29C92CBCC71BAE6 /* Settings.swift in Sources */,
+				BBC8995EB69DB5788E3351CA /* SettingsView.swift in Sources */,
+				B7AEF9926101DD1FBF58D1AC /* Sockets.swift in Sources */,
+				2ABDF33EF2AD10FD2B0DB560 /* TimingAndAudio.swift in Sources */,
+				6EEDB88A7E1B565705A45FE0 /* TotalreflexionApp.swift in Sources */,
+				7A0BFC8D2D6241816ED5000C /* VideoDecoder.swift in Sources */,
+				3A6CEE656D1311C6D63D7BCB /* VideoSurfaceView.swift in Sources */,
+				1FCB7E023DDEC3C108258203 /* ZoomableView.swift in Sources */,
+				0EFF90B5F879BC735313D086 /* fairplay_playfair.c in Sources */,
+				F5C391C2DC1598E89F788D65 /* hand_garble.c in Sources */,
+				FE450462BE8B9B2603C2332B /* modified_md5.c in Sources */,
+				219E9EBD9EF050090CFB5800 /* omg_hax.c in Sources */,
+				F325F44EB1E76AC1380634EB /* playfair.c in Sources */,
+				FAD8BCF4DF169271395C7311 /* sap_hash.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		75A22DDC26B77FF98F68B418 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Totalreflexion/Resources/Totalreflexion.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = NO;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/Totalreflexion/FairPlay $(SRCROOT)/Totalreflexion/FairPlay/playfair";
+				INFOPLIST_FILE = Totalreflexion/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.hochwald.Totalreflexion;
+				PRODUCT_NAME = Totalreflexion;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Totalreflexion/App/Totalreflexion-Bridging-Header.h";
+				WARNING_CFLAGS = "-Wno-everything";
+			};
+			name = Release;
+		};
+		8B2051C32E4005281D55F1AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		BA9955EEFA2DCD41A55D3F7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		DEB07996DA68D44DBBE86148 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Totalreflexion/Resources/Totalreflexion.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = NO;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/Totalreflexion/FairPlay $(SRCROOT)/Totalreflexion/FairPlay/playfair";
+				INFOPLIST_FILE = Totalreflexion/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.hochwald.Totalreflexion;
+				PRODUCT_NAME = Totalreflexion;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Totalreflexion/App/Totalreflexion-Bridging-Header.h";
+				WARNING_CFLAGS = "-Wno-everything";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		431F93F8010483DCAA1F2F46 /* Build configuration list for PBXProject "Totalreflexion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA9955EEFA2DCD41A55D3F7A /* Debug */,
+				8B2051C32E4005281D55F1AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DD4A42F6F165251F142EC566 /* Build configuration list for PBXNativeTarget "Totalreflexion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEB07996DA68D44DBBE86148 /* Debug */,
+				75A22DDC26B77FF98F68B418 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4F435B458F21079837DD600C /* Project object */;
+}

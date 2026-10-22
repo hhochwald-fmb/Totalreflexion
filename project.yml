@@ -1,0 +1,45 @@
+name: Totalreflexion
+options:
+  bundleIdPrefix: de.hochwald
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  Totalreflexion:
+    type: application
+    platform: macOS
+    sources:
+      - path: Totalreflexion
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.hochwald.Totalreflexion
+        PRODUCT_NAME: Totalreflexion
+        INFOPLIST_FILE: Totalreflexion/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Totalreflexion/Resources/Totalreflexion.entitlements
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        ENABLE_HARDENED_RUNTIME: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        SWIFT_OBJC_BRIDGING_HEADER: Totalreflexion/App/Totalreflexion-Bridging-Header.h
+        HEADER_SEARCH_PATHS: $(SRCROOT)/Totalreflexion/FairPlay $(SRCROOT)/Totalreflexion/FairPlay/playfair
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GCC_WARN_INHIBIT_ALL_WARNINGS: NO
+        # playfair is third-party C; keep its warnings out of the build log.
+        WARNING_CFLAGS: -Wno-everything
+        COMBINE_HIDPI_IMAGES: YES
+    preBuildScripts:
+      - name: SwiftLint
+        basedOnDependencyAnalysis: false
+        script: |
+          # Xcode build scripts don't inherit the shell PATH, so add Homebrew (Apple Silicon + Intel).
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          if command -v swiftlint >/dev/null 2>&1; then
+            cd "$SRCROOT" && swiftlint lint --quiet
+          else
+            echo "warning: SwiftLint nicht installiert - brew install swiftlint"
+          fi

@@ -1,0 +1,15 @@
+included:
+  - Totalreflexion
+excluded:
+  - Totalreflexion/FairPlay
+line_length:
+  warning: 130
+  error: 160
+identifier_name:
+  excluded: [id, x, y, dx, dy, nx, ny, to, iv, ok]
+type_body_length:
+  warning: 350
+file_length:
+  warning: 500
+function_body_length:
+  warning: 60
