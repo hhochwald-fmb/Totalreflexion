@@ -12,6 +12,7 @@ final class AudioPlayer {
     private let framesPerPacket: UInt32
     private let log = Logger(subsystem: "Totalreflexion", category: "Audio")
     private var queuedBuffers = 0
+    private var failedDecodes = 0
     private let lock = NSLock()
 
     /// Linear gain 0...1, combines the iPad's volume slider and the local mute switch.
@@ -31,9 +32,13 @@ final class AudioPlayer {
             mChannelsPerFrame: 2, mBitsPerChannel: 0, mReserved: 0)
         var output = outputFormat.streamDescription.pointee
         guard AudioConverterNew(&input, &output, &converter) == noErr, let converter else { return nil }
-        // AudioSpecificConfig for 44.1 kHz stereo (ELD with 480 samples, or LC).
-        var cookie: [UInt8] = isELD ? [0xF8, 0xE8, 0x50, 0x00] : [0x12, 0x10]
-        AudioConverterSetProperty(converter, kAudioConverterDecompressionMagicCookie, UInt32(cookie.count), &cookie)
+        // AudioSpecificConfig for 44.1 kHz stereo (ELD with 480 samples, or LC), wrapped as the decoder expects.
+        var cookie = Self.elementaryStreamDescriptor(isELD ? [0xF8, 0xE8, 0x50, 0x00] : [0x12, 0x10])
+        let cookieStatus = AudioConverterSetProperty(converter, kAudioConverterDecompressionMagicCookie,
+                                                     UInt32(cookie.count), &cookie)
+        if cookieStatus != noErr {
+            log.error("Audio magic cookie rejected: \(cookieStatus)")
+        }
 
         engine.attach(player)
         engine.connect(player, to: engine.mainMixerNode, format: outputFormat)
@@ -44,6 +49,7 @@ final class AudioPlayer {
             return nil
         }
         player.play()
+        log.info("Audio output started (\(isELD ? "AAC-ELD" : "AAC-LC"), \(self.framesPerPacket) frames)")
     }
 
     deinit {
@@ -74,12 +80,20 @@ final class AudioPlayer {
             context.storage?.deallocate()
             context.description.deallocate()
         }
+        // The converter fills at most mDataByteSize, which follows frameLength.
+        buffer.frameLength = framesPerPacket
         var frames = framesPerPacket
         let status = withUnsafeMutablePointer(to: &context) { contextPointer in
             AudioConverterFillComplexBuffer(converter, decodeInputCallback, contextPointer, &frames,
                                             buffer.mutableAudioBufferList, nil)
         }
-        guard status == noErr || status == decodeInputExhausted, frames > 0 else { return }
+        guard status == noErr || status == decodeInputExhausted, frames > 0 else {
+            failedDecodes += 1
+            if failedDecodes == 1 || failedDecodes % 1000 == 0 {
+                log.error("Audio decode failed \(self.failedDecodes)x: status \(status), \(packet.count) bytes")
+            }
+            return
+        }
         buffer.frameLength = frames
 
         lock.lock()
@@ -91,6 +105,19 @@ final class AudioPlayer {
             queuedBuffers -= 1
             lock.unlock()
         }
+    }
+}
+
+extension AudioPlayer {
+    /// MPEG-4 ES descriptor (as in an `esds` box) around an AudioSpecificConfig: the magic cookie format
+    /// AudioConverter accepts for AAC; it rejects a bare AudioSpecificConfig.
+    static func elementaryStreamDescriptor(_ config: [UInt8]) -> [UInt8] {
+        let specificInfo: [UInt8] = [0x05, UInt8(config.count)] + config
+        // Object type 0x40 (MPEG-4 audio), stream type 0x15 (audio); buffer size and bitrates unknown.
+        let decoderConfig: [UInt8] = [0x04, UInt8(13 + specificInfo.count), 0x40, 0x15]
+            + [UInt8](repeating: 0, count: 11) + specificInfo
+        let syncLayer: [UInt8] = [0x06, 0x01, 0x02]
+        return [0x03, UInt8(3 + decoderConfig.count + syncLayer.count), 0, 0, 0] + decoderConfig + syncLayer
     }
 }
 

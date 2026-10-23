@@ -327,11 +327,15 @@ final class AirPlaySession {
     private func startAudio(_ stream: [String: Any]) -> (data: UInt16, control: UInt16) {
         audio?.stop()
         audio = nil
-        guard configuration.audioEnabled, let sessionKey, let audioIV else { return (0, 0) }
+        guard configuration.audioEnabled, let sessionKey, let audioIV else {
+            log.info("Audio stream ignored: audio off or no key")
+            return (0, 0)
+        }
         let compressionType = (stream["ct"] as? NSNumber)?.intValue ?? 8
         let samplesPerFrame = (stream["spf"] as? NSNumber)?.intValue ?? 480
         let receiver = AudioReceiver(queue: queue, key: sessionKey, iv: audioIV,
                                      compressionType: compressionType, samplesPerFrame: samplesPerFrame)
+        log.info("Audio stream ct=\(compressionType) spf=\(samplesPerFrame) ready=\(receiver != nil)")
         receiver?.localVolume = localVolume
         audio = receiver
         return (receiver?.dataPort ?? 0, receiver?.controlPort ?? 0)
@@ -344,6 +348,7 @@ final class AirPlaySession {
             guard let decibels = Float(line.dropFirst(7).trimmingCharacters(in: .whitespaces)) else { continue }
             // AirPlay volume: -30...0 dB, -144 = muted.
             let linear: Float = decibels <= -30 ? 0 : pow(10, decibels / 20)
+            log.debug("Volume from iPad: \(decibels) dB")
             audio?.clientVolume = linear
             delegate?.session(self, volumeChanged: linear)
         }
