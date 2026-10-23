@@ -16,7 +16,7 @@ AirPlay-Empfänger für macOS (ähnlich wie AirServer oder Reflector): iPads spi
 - **Passt sich automatisch an.** Wird das iPad gedreht, ändert sich das Seitenverhältnis sofort mit.
 - **Rahmen:** nur der Bildschirm, ein gezeichneter iPad-Rahmen (randlos oder mit Home-Button, mehrere Farben) oder ein eigenes PNG-Mockup. Den Bildschirmbereich des PNGs erkennt die App automatisch; das Bild dreht sich mit dem iPad mit.
 - **Zoom** in Raster und Bühne: Pinch, ⌥ + Scrollrad oder ⌘+ / ⌘− / ⌘0. Bei Zoom wird mit zwei Fingern verschoben.
-- Ton wird mitübertragen (AAC-ELD).
+- Ton wird mitübertragen (AAC-ELD). Mit „Bild und Ton synchron“ laufen Bild und Ton lippensynchron und ohne WLAN-Ruckler, etwa 0,2 s verzögert; ausgeschaltet erscheint das Bild sofort.
 - **Name und Anmeldung** (Steuerfenster › Empfänger): eigener Name in der AirPlay-Liste (z. B. der Raum). Anmeldung ohne, mit **Code auf dem Bildschirm** (4 Ziffern groß auf allen Bildschirmen, gekoppelte iPads werden wiedererkannt; SRP-6a-Kopplung wie bei Apple TV/UxPlay) oder mit **Passwort** (RTSP-Digest).
 - **Hilfe** (⌘?, „?“ im Steuerfenster): erklärt alle Funktionen und die drei Ansichten. Öffnet sich beim ersten Start einmal von selbst.
 

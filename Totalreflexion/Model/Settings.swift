@@ -155,6 +155,8 @@ final class AppSettings {
     var resolution: StreamResolution { didSet { defaults.set(resolution.rawValue, forKey: "resolution") } }
     var maxFPS: Int { didSet { defaults.set(maxFPS, forKey: "maxFPS") } }
     var audioEnabled: Bool { didSet { defaults.set(audioEnabled, forKey: "audioEnabled") } }
+    /// Delay the picture like the sound, so both play smoothly and in sync.
+    var lipSync: Bool { didSet { defaults.set(lipSync, forKey: "lipSync") } }
     var showNames: Bool { didSet { defaults.set(showNames, forKey: "showNames") } }
     var defaultFrameStyle: FrameStyle { didSet { defaults.set(defaultFrameStyle.rawValue, forKey: "frameStyle") } }
     var defaultFrameColor: FrameColor { didSet { defaults.set(defaultFrameColor.rawValue, forKey: "frameColor") } }
@@ -174,6 +176,7 @@ final class AppSettings {
         resolution = StreamResolution(rawValue: defaults.string(forKey: "resolution") ?? "") ?? .iPadStandard
         maxFPS = defaults.object(forKey: "maxFPS") as? Int ?? 60
         audioEnabled = defaults.object(forKey: "audioEnabled") as? Bool ?? true
+        lipSync = defaults.object(forKey: "lipSync") as? Bool ?? true
         showNames = defaults.object(forKey: "showNames") as? Bool ?? true
         defaultFrameStyle = FrameStyle(rawValue: defaults.string(forKey: "frameStyle") ?? "") ?? .modern
         defaultFrameColor = FrameColor(rawValue: defaults.string(forKey: "frameColor") ?? "") ?? .spaceGray

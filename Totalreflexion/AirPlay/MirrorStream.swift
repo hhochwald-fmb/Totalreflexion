@@ -5,7 +5,8 @@ import Foundation
 final class MirrorStreamParser {
     enum Event {
         case parameterSets(sps: Data, pps: Data)
-        case frame(Data)
+        /// An encoded frame and its iPad timestamp in seconds (the clock of the audio sync packets).
+        case frame(Data, timestamp: Double)
         case suspended(Bool)
     }
 
@@ -40,7 +41,7 @@ final class MirrorStreamParser {
         case 0x00:
             let decrypted = cipher.process(payload)
             if Self.isValidAVCC(decrypted) {
-                onEvent(.frame(decrypted))
+                onEvent(.frame(decrypted, timestamp: Self.timestamp(header)))
             }
         case 0x01:
             // 0x56 / 0x5e in byte 6: the iPad went to sleep or locked its screen.
@@ -56,6 +57,12 @@ final class MirrorStreamParser {
             // 0x02 heartbeat, 0x05 streaming report: nothing to do.
             break
         }
+    }
+
+    /// NTP format at bytes 8-15, little-endian: seconds in the upper half, fraction in the lower.
+    private static func timestamp(_ header: [UInt8]) -> Double {
+        let raw = header[8..<16].reversed().reduce(UInt64(0)) { $0 << 8 | UInt64($1) }
+        return Double(raw >> 32) + Double(raw & 0xFFFF_FFFF) / 4_294_967_296
     }
 
     /// avcC layout: version, profile, compat, level, 0xFF, 0xE1, spsLen(2), sps, numPPS, ppsLen(2), pps.

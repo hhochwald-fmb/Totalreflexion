@@ -53,7 +53,7 @@ private struct OverviewHelp: View {
                 HelpCard(icon: "plus.magnifyingglass", title: "Zoom",
                          text: "Details heranholen: Pinch, ⌥ + Scrollrad oder ⌘+ / ⌘−.")
                 HelpCard(icon: "speaker.wave.2", title: "Ton",
-                         text: "Der Ton der iPads wird mitübertragen, pro Gerät stummschaltbar.")
+                         text: "Der Ton der iPads wird mitübertragen, lippensynchron und pro Gerät stummschaltbar.")
             }
         }
         HelpSection(title: "So fängst du an") {
@@ -122,7 +122,7 @@ private struct ControlHelp: View {
                 ("Rahmen", "Rahmen, Farbe, eigenes Rahmenbild und Namen – für alle iPads."),
                 ("Hintergrund", "Nur bei der Bühne: Farbe, Verlauf oder Bild."),
                 ("Empfänger", "Name auf dem iPad, Anmeldung (ohne, Code oder Passwort) und unter „Qualität & Ton“ "
-                    + "Auflösung, Bildrate und Ton.")
+                    + "Auflösung, Bildrate, Ton und „Bild und Ton synchron“.")
             ])
         }
         HelpSection(title: "Pro iPad in der Liste") {
@@ -323,7 +323,12 @@ private struct TroubleshootingHelp: View {
                 ("Code oder Passwort wird abgelehnt", "Am iPad noch einmal verbinden; beim Code den aktuell angezeigten "
                     + "nehmen, er ändert sich bei jedem Versuch."),
                 ("Kein Ton", "Empfänger › Qualität & Ton › „Ton wiedergeben“; iPad stumm (…)? Lautstärke am iPad?"),
-                ("Bild ruckelt", "Empfänger › Qualität & Ton: kleinere Auflösung oder 30 fps, danach neu starten."),
+                ("Bild ruckelt", "Empfänger › Qualität & Ton: „Bild und Ton synchron“ einschalten – das gleicht "
+                    + "Schwankungen im WLAN aus. Hilft das nicht: kleinere Auflösung oder 30 fps, danach neu starten."),
+                ("Ton und Bild versetzt", "Empfänger › Qualität & Ton › „Bild und Ton synchron“ einschalten. Bild und "
+                    + "Ton kommen dann etwa 0,2 Sekunden verzögert, aber gemeinsam."),
+                ("Bild reagiert zu träge", "Zum Schreiben und Zeichnen „Bild und Ton synchron“ ausschalten: Das Bild "
+                    + "erscheint dann sofort, der Ton läuft etwas hinterher."),
                 ("Mac doppelt in der Liste", "Der zweite Eintrag ist der AirPlay-Empfänger von macOS. Abschalten unter "
                     + "Systemeinstellungen › Allgemein › AirDrop & Handoff.")
             ])

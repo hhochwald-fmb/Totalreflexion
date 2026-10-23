@@ -11,9 +11,15 @@ final class AudioPlayer {
     private var converter: AudioConverterRef?
     private let framesPerPacket: UInt32
     private let log = Logger(subsystem: "Totalreflexion", category: "Audio")
-    private var queuedBuffers = 0
     private var failedDecodes = 0
-    private let lock = NSLock()
+    /// Where the sound is placed on the player's timeline: this RTP timestamp plays at this sample time.
+    /// Following packets play right after each other from there, without gaps or overlaps.
+    private var anchor: (timestamp: UInt32, sampleTime: AVAudioFramePosition)?
+    private var latePackets = 0
+    private var resyncs = 0
+
+    /// Called when a packet arrived after its play time.
+    var onLate: () -> Void = {}
 
     /// Linear gain 0...1, combines the iPad's volume slider and the local mute switch.
     var volume: Float = 1 {
@@ -65,15 +71,10 @@ final class AudioPlayer {
         converter = nil
     }
 
-    func enqueue(_ packet: Data) {
+    /// - Parameter playTime: host time (seconds) at which the packet should be heard.
+    func enqueue(_ packet: Data, timestamp: UInt32, playTime: Double) {
         guard let converter, !packet.isEmpty,
               let buffer = AVAudioPCMBuffer(pcmFormat: outputFormat, frameCapacity: framesPerPacket) else { return }
-
-        lock.lock()
-        let backlog = queuedBuffers
-        lock.unlock()
-        // Keep latency low: drop audio if the device has fallen behind.
-        guard backlog < 12 else { return }
 
         var context = DecodeContext(packet: packet)
         defer {
@@ -95,15 +96,43 @@ final class AudioPlayer {
             return
         }
         buffer.frameLength = frames
+        schedule(buffer, timestamp: timestamp, playTime: playTime)
+    }
 
-        lock.lock()
-        queuedBuffers += 1
-        lock.unlock()
-        player.scheduleBuffer(buffer) { [weak self] in
-            guard let self else { return }
-            lock.lock()
-            queuedBuffers -= 1
-            lock.unlock()
+    private func schedule(_ buffer: AVAudioPCMBuffer, timestamp: UInt32, playTime: Double) {
+        guard let renderTime = player.lastRenderTime, renderTime.isHostTimeValid,
+              let now = player.playerTime(forNodeTime: renderTime) else { return }
+        let rate = outputFormat.sampleRate
+        // Sound leaves the speaker `presentationLatency` after it is rendered.
+        let hostOffset = playTime - engine.outputNode.presentationLatency - AVAudioTime.seconds(forHostTime: renderTime.hostTime)
+        let target = now.sampleTime + AVAudioFramePosition(hostOffset * rate)
+
+        var start = anchor.map { $0.sampleTime + AVAudioFramePosition(Int32(bitPattern: timestamp &- $0.timestamp)) }
+        // The iPad's and the Mac's clocks drift apart slowly; resync once the difference becomes audible.
+        if start.map({ abs($0 - target) > AVAudioFramePosition(0.025 * rate) }) ?? true {
+            if anchor != nil {
+                resyncs += 1
+                logStatistics()
+            }
+            anchor = (timestamp, target)
+            start = target
+        }
+        guard let start else { return }
+        // The render thread works ahead by about one I/O buffer; a slot inside it is already gone.
+        guard start > now.sampleTime + AVAudioFramePosition(0.012 * rate) else {
+            latePackets += 1
+            anchor = nil
+            logStatistics()
+            onLate()
+            return
+        }
+        player.scheduleBuffer(buffer, at: AVAudioTime(sampleTime: start, atRate: rate))
+    }
+
+    private func logStatistics() {
+        let events = latePackets + resyncs
+        if events <= 10 || events % 50 == 0 {
+            log.info("Audio late packets: \(self.latePackets), resyncs: \(self.resyncs)")
         }
     }
 }

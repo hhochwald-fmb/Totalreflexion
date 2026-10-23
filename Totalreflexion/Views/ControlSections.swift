@@ -242,6 +242,12 @@ struct ReceiverSection: View {
                     Text("60 fps").tag(60)
                 }
                 Toggle("Ton wiedergeben", isOn: $settings.audioEnabled)
+                Toggle("Bild und Ton synchron", isOn: $settings.lipSync)
+                Text(settings.lipSync
+                     ? "Bild und Ton laufen flüssig und lippensynchron, dafür etwa 0,2 Sekunden verzögert. Gut für Videos."
+                     : "Das Bild erscheint sofort, gut zum Schreiben und Zeichnen. Der Ton läuft dem Bild etwas hinterher.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             if needsRestart {
                 HStack {
@@ -266,6 +272,7 @@ struct ReceiverSection: View {
         .onChange(of: settings.resolution) { needsRestart = true }
         .onChange(of: settings.maxFPS) { needsRestart = true }
         .onChange(of: settings.audioEnabled) { needsRestart = true }
+        .onChange(of: settings.lipSync) { needsRestart = true }
     }
 
     @ViewBuilder private var accessDetails: some View {

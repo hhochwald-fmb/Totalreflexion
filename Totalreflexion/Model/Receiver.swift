@@ -84,7 +84,7 @@ final class Receiver {
         configuration = ReceiverConfiguration(
             name: settings.receiverName, identity: identity,
             width: settings.resolution.size.width, height: settings.resolution.size.height,
-            maxFPS: settings.maxFPS, audioEnabled: settings.audioEnabled, access: access)
+            maxFPS: settings.maxFPS, audioEnabled: settings.audioEnabled, lipSync: settings.lipSync, access: access)
         // macOS' own AirPlay receiver occupies 7000, so try a nearby fixed port first.
         startListener(preferredPorts: [7100, 7200, 0])
     }

@@ -10,6 +10,8 @@ struct ReceiverConfiguration {
     var height: Int
     var maxFPS: Int
     var audioEnabled: Bool
+    /// Hold back video frames until their play time, so they match the sound and Wi-Fi bursts do not show.
+    var lipSync: Bool
     var access: AccessControl
 }
 
@@ -51,6 +53,8 @@ final class AirPlaySession {
     private var decoder: VideoDecoder?
     private var frameSource: FrameSource?
     private var audio: AudioReceiver?
+    private let clock = PlayoutClock()
+    private lazy var videoPlayout = PlayoutQueue(queue: queue)
     private var lastVideoSize = CGSize.zero
     private var localVolume: Float = 1
 
@@ -304,9 +308,10 @@ final class AirPlaySession {
             guard let self else { return }
             switch event {
             case let .parameterSets(sps, pps):
-                decoder.configure(sps: sps, pps: pps)
-            case let .frame(data):
-                decoder.decode(data)
+                // Applies to the frames after it, which may still be waiting.
+                videoPlayout.enqueueAfterPending { decoder.configure(sps: sps, pps: pps) }
+            case let .frame(data, timestamp):
+                playFrame(data, timestamp: timestamp, decoder: decoder)
             case let .suspended(isSuspended):
                 delegate?.session(self, suspended: isSuspended)
             }
@@ -333,8 +338,8 @@ final class AirPlaySession {
         }
         let compressionType = (stream["ct"] as? NSNumber)?.intValue ?? 8
         let samplesPerFrame = (stream["spf"] as? NSNumber)?.intValue ?? 480
-        let receiver = AudioReceiver(queue: queue, key: sessionKey, iv: audioIV,
-                                     compressionType: compressionType, samplesPerFrame: samplesPerFrame)
+        let receiver = AudioReceiver(queue: queue, key: sessionKey, iv: audioIV, compressionType: compressionType,
+                                     samplesPerFrame: samplesPerFrame, clock: clock)
         log.info("Audio stream ct=\(compressionType) spf=\(samplesPerFrame) ready=\(receiver != nil)")
         receiver?.localVolume = localVolume
         audio = receiver
@@ -372,6 +377,7 @@ final class AirPlaySession {
     }
 
     private func stopMirroring() {
+        videoPlayout.removeAll()
         mirrorListener?.close()
         mirrorListener = nil
         mirrorParser = nil
@@ -389,6 +395,23 @@ final class AirPlaySession {
         timing = nil
         connection.cancel()
         delegate?.sessionDidEnd(self)
+    }
+}
+
+// MARK: - Lip sync
+
+extension AirPlaySession {
+    /// Decodes a frame right away, or with lip sync at its play time.
+    private func playFrame(_ data: Data, timestamp: Double, decoder: VideoDecoder) {
+        clock.observe(timestamp)
+        guard configuration.lipSync, let playTime = clock.playTime(for: timestamp) else {
+            decoder.decode(data)
+            return
+        }
+        if playTime < HostClock.now - 0.02 {
+            clock.reportLate()
+        }
+        videoPlayout.enqueue(at: playTime) { decoder.decode(data) }
     }
 }
 
